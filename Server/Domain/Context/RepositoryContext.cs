@@ -10,6 +10,11 @@ namespace Domain.Context
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<RoleModel> Roles { get; set; }
+        public DbSet<QuestionModel> Questions { get; set; }
+        public DbSet<AnswerModel> Answers { get; set; }
+        public DbSet<QuestionTypeModel> QuestionTypes { get; set; }
+        public DbSet<UserAnswerModel> UserAnswers { get; set; }
+        public DbSet<TestModel> Tests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

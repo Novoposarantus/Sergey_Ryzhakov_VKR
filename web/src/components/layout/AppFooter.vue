@@ -8,7 +8,9 @@
             text-xs-center
             white--text
           >
-            TulaWebCup 2019 <strong> Gallery</strong>
+            <div>Выпускная квалификационная работа</div>
+            <div>Рыжакова Сергей Александровича</div>
+            <div>студента Института прикладной математики и компьютерных наук <strong>ТулГУ</strong></div>
           </v-flex>
         </v-layout>
       </v-footer>

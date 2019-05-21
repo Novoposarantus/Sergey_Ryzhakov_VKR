@@ -1,36 +1,36 @@
-﻿using System.Threading.Tasks;
-using API.Options;
-using Domain.Context;
+﻿using Domain.Context;
 using Domain.Interfaces;
 using Domain.Repositories;
+using API.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace API
 {
-    public class Startup
-    {
+	public class Startup
+	{
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
+		{
+			services.AddMvc();
             services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
             services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IUserRepository>(provider =>
                 new UserRepository(Configuration.GetConnectionString("DefaultConnection"),
+                provider.GetService<IRepositoryContextFactory>()));
+            services.AddScoped<ITestRepository>(provider =>
+                new TestRepository(Configuration.GetConnectionString("DefaultConnection"),
                 provider.GetService<IRepositoryContextFactory>()));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -71,9 +71,9 @@ namespace API
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -96,5 +96,5 @@ namespace API
                     template: "api/{controller}/{action}/{id?}");
             });
         }
-    }
+	}
 }

@@ -38,9 +38,11 @@ export const auth = {
         [authMutations.authError]: (state, error = 'Что-то пошло не так. Повторите попытку позже.') => {
             state[authState.isAuthenticated] = false;
             state[authState.error] = error;
+            Cookie.remove('user-token');
         },
         [authMutations.authLogout]: (state)=>{
             state[authState.isAuthenticated] = false;
+            Cookie.remove('user-token');
         },
         [authMutations.setUserInfo]: (state, userData) =>{
             state[authState.userData] = {
@@ -79,7 +81,6 @@ export const auth = {
             }
         },
         [authActions.logout]: ({commit, dispatch}) => {
-            Cookie.remove('user-token');
             commit(authMutations.authLogout);
             dispatch(globalActions.clearStore, null , {root: true})
         },

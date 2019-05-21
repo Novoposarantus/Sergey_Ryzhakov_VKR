@@ -59,10 +59,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {
-    authGlobalGetters,
-    authGlobalActions
-} from '../../support';
+import {defaultVuex} from '../../support';
 
 export default {
     data(){
@@ -85,12 +82,12 @@ export default {
     },
     computed:{
         ...mapGetters({
-            error: authGlobalGetters.error,
+            error: defaultVuex.globalGettersNames("auth").error,
         })
     },
     methods:{
         ...mapActions({
-            register : authGlobalActions.register
+            register : "auth/REGISTER"
         }),
         async submit () {
             if (!this.$refs.form.validate()) {

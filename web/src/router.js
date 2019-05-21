@@ -5,15 +5,14 @@ import LoginView from '@/views/auth/LoginView';
 import RegistrationView from '@/views/auth/RegistrationView';
 
 import {
-    routeNames,
-    authGlobalGetters
+    routeNames
 } from './support';
 
 Vue.use(VueRouter);
 
 export function createRouter (store) {
     function ifNotAuthenticated(next){
-        if (store.getters[authGlobalGetters.isAuthenticated]) {
+        if (store.getters["auth/IS_AUTHENTICATED"]) {
             next({name: routeNames.StartGallery});
             return false;
         }
@@ -21,7 +20,7 @@ export function createRouter (store) {
     }
  
     function ifAuthenticated(next){
-        if (!store.getters[authGlobalGetters.isAuthenticated]) {
+        if (!store.getters["auth/IS_AUTHENTICATED"]) {
             next({name: routeNames.Login});
             return false;
         }

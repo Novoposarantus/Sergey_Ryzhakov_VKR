@@ -1,120 +1,111 @@
 import Cookie from 'js-cookie';
 import {
     request,
-    defaultGetters,
-    defaultState,
-    defaultActions,
-    defaultMutations,
-    authState,
-    authGetters,
-    authActions,
-    authMutations,
-    globalActions,
-    defaultClear
+    defaultVuex
 } from '../support';
 
 export const auth = {
     namespaced: true,
     state:{
-        ...defaultState,
-        [authState.isAuthenticated] : !!Cookie.get('user-token'),
-        [authState.userData]        : null
+        ...defaultVuex.state,
+        isAuthenticated : !!Cookie.get('user-token'),
+        userData        : null
     },
     getters:{
-        ...defaultGetters,
-        [authGetters.isAuthenticated]    : (state) => state[authState.isAuthenticated],
-        [authGetters.userName]           : (state) => state[authState.userData] 
-                                                    ? state[authState.userData].userName 
-                                                    : null,
-        [authGetters.roleId]             : (state) => state[authState.userData] 
-                                                    ? state[authState.userData].roleId 
-                                                    : null,
+        ...defaultVuex.getters,
+        "IS_AUTHENTICATED"    : (state) => state.isAuthenticated,
+        "USER_NAME"           : (state) => state.userData 
+                                ? state.userData.userName 
+                                : null,
+        "ROLE_ID"             : (state) => state.userData
+                                ? state.userData.roleId 
+                                : null,
     },
     mutations:{
-        ...defaultMutations,
-        [authMutations.authSuccess]: (state) => {
-            state[authState.isAuthenticated] = true;
+        ...defaultVuex.mutations,
+        "AUTH_SUCCESS": (state) => {
+            state.isAuthenticated = true;
         },
-        [authMutations.authError]: (state, error = 'Что-то пошло не так. Повторите попытку позже.') => {
-            state[authState.isAuthenticated] = false;
-            state[authState.error] = error;
+        "AUTH_ERROR": (state, error = 'Что-то пошло не так. Повторите попытку позже.') => {
+            state.isAuthenticated = false;
+            state.error = error;
             Cookie.remove('user-token');
         },
-        [authMutations.authLogout]: (state)=>{
-            state[authState.isAuthenticated] = false;
+        "AUTH_LOGOUT": (state)=>{
+            state.isAuthenticated = false;
             Cookie.remove('user-token');
         },
-        [authMutations.setUserInfo]: (state, userData) =>{
-            state[authState.userData] = {
+        "SET_AUTH_INFO": (state, userData) =>{
+            state.userData = {
                 ...userData
             }
         },
-        [authMutations.clear](state){
-            defaultClear(state);
-            state[authState.isAuthenticated] = false;
-            state[authState.userData] = null;
+        "CLEAR"(state){
+            defaultVuex.clear(state);
+            state.isAuthenticated = false;
+            state.userData = null;
         }
     },
     actions:{
-        ...defaultActions,
-        [authActions.authentication]: async ({commit, dispatch}, user)=>{
-            commit(authMutations.startLoading);
+        ...defaultVuex.actions,
+        "AUTHENTICATION" : async ({commit, dispatch}, user)=>{
+            commit(defaultVuex.mutations.startLoading);
             try {
                 const {json} = await request(process.env.VUE_APP_AUTHENTICATION, 'POST', user);
-                dispatch(authActions.logout);
+                dispatch("LOGOUT");
                 Cookie.set('user-token', json.access_token, { expires: json.timeOut * 60 });
-                commit(authMutations.setUserInfo, {
+                commit("SET_AUTH_INFO", {
                     userName: json.userName,
                     roleId : json.roleId
                 })
-                commit(authMutations.authSuccess);
+                commit("AUTH_SUCCESS");
             }
             catch (error) {
                 if(!error.response || error.response.status !== 401){
-                    commit(authMutations.authError);
+                    commit("AUTH_ERROR");
                 }
                 else{
-                    commit(authMutations.authError, error.response.data);
+                    commit("AUTH_ERROR", error.response.data);
                 }
                 Cookie.remove('user-token');
-                commit(authMutations.finishLoading);
+                commit(defaultVuex.mutations.finishLoading);
             }
         },
-        [authActions.logout]: ({commit, dispatch}) => {
-            commit(authMutations.authLogout);
-            dispatch(globalActions.clearStore, null , {root: true})
+        "LOGOUT" : ({commit, dispatch}) => {
+            commit("AUTH_LOGOUT");
+            dispatch("CLEAR_STORE", null , {root: true})
         },
-        [authActions.register]: async ({commit}, user)=>{
-            commit(authMutations.startLoading);
+        "REGISTER" : async ({commit}, user)=>{
+            commit(defaultVuex.mutations.startLoading);
             try {
                 await request(process.env.VUE_APP_USERS, 'POST', user);
-                commit(authMutations.finishLoading);
+                commit(defaultVuex.mutations.finishLoading);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 401){
-                    commit(authMutations.authError);
+                    commit("AUTH_ERROR");
                 }
                 else{
-                    commit(authMutations.authError, error.response.data);
+                    commit("AUTH_ERROR", error.response.data);
                 }
-                commit(authMutations.finishLoading);
+                commit(defaultVuex.mutations.finishLoading);
             }
         },
-        [authActions.loadUserData]: async ({commit}) => {
-            commit(authMutations.startLoading);
+        "LOAD_USER_DATA" : async ({commit}) => {
+            commit(defaultVuex.mutations.startLoading);
             try {
                 const {json} = await request(process.env.VUE_APP_USERS, 'GET');
-                commit(authMutations.setUserInfo, json);
-                commit(authMutations.finishLoading);
+                commit("SET_AUTH_INFO", json);
+                commit(defaultVuex.mutations.finishLoading);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 400){
-                    commit(authMutations.authError);
+                    commit("AUTH_ERROR");
                 }
                 else{
-                    commit(authMutations.authError, error.response.data);
+                    commit("AUTH_ERROR", error.response.data);
                 }
-                commit(authMutations.finishLoading);
+                commit(defaultVuex.mutations.finishLoading);
             }
         }
     }

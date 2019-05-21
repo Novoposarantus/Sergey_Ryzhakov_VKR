@@ -13,7 +13,6 @@
 <script>
 import AppHeader from './components/layout/AppHeader';
 import AppFooter from './components/layout/AppFooter';
-import {authGlobalGetters, authGlobalActions} from '@/support';
 
 export default {
   name: 'app',
@@ -22,8 +21,8 @@ export default {
     AppFooter
   },
   async beforeMount(){
-    if(this.$store.getters[authGlobalGetters.isAuthenticated]){
-      await this.$store.dispatch(authGlobalActions.loadUserData)
+    if(this.$store.getters["auth/IS_AUTHENTICATED"]){
+      await this.$store.dispatch("auth/LOAD_USER_DATA")
     }
   }
 }

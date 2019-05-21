@@ -50,8 +50,7 @@ y<template>
 import {mapActions, mapGetters} from 'vuex';
 import {
     routeNames,
-    authGlobalGetters,
-    authGlobalActions,
+    defaultVuex
 } from '../../support';
 
 export default {
@@ -66,12 +65,12 @@ export default {
     },
     computed:{
         ...mapGetters({
-            error: authGlobalGetters.error,
+            error: defaultVuex.globalGettersNames("auth").error,
         })
     },
     methods:{
         ...mapActions({
-            authentication : authGlobalActions.authentication
+            authentication : "auth/AUTHENTICATION"
         }),
         async submit () {
             if (!this.$refs.form.validate()) {

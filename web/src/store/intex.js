@@ -3,8 +3,7 @@ import Vuex from 'vuex';
 import {auth} from './auth';
 
 import {
-    defaultMutationsNames,
-    globalActions
+    defaultVuex
 } from '@/support';
 
 Vue.use(Vuex);
@@ -17,9 +16,9 @@ export function createStore() {
     return new Vuex.Store({
         modules,
         actions:{
-            [globalActions.clearStore] : ({commit}) => {
+            "CLEAR_STORE" : ({commit}) => {
                 for(let moduleName in modules){
-                    commit(`${moduleName}/${defaultMutationsNames.clear}`);
+                    commit(`${moduleName}/${defaultVuex.clear}`);
                 }
             }
         }

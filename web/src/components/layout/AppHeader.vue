@@ -1,14 +1,5 @@
 <template>
   <v-toolbar app>
-    <v-toolbar-items>
-      <v-btn
-        flat
-        :to="{ name : routeNames.StartGallery }"
-      >
-        <v-icon>far fa-images</v-icon>
-        <span class="hidden-sm-and-down title">Галерея</span>
-      </v-btn>
-    </v-toolbar-items>
     <v-spacer></v-spacer>
     <v-toolbar-items>
         <v-btn
@@ -40,7 +31,7 @@
       class="hidden-sm-and-down"
       v-if="isAuthenticated"
     >
-      <v-icon>fas fa-user</v-icon>
+      <v-icon class="user-name-icon">fas fa-user</v-icon>
       <span>{{userName}}</span>
     </v-toolbar-title>
   </v-toolbar>
@@ -49,9 +40,7 @@
 <script>
 import {mapGetters, mapActions} from 'vuex';
 import {
-  routeNames,
-  authGlobalGetters,
-  authGlobalActions
+  routeNames
 } from '@/support';
 export default {
   data(){
@@ -61,13 +50,13 @@ export default {
   },
   computed:{
     ...mapGetters({
-      isAuthenticated : authGlobalGetters.isAuthenticated,
-      userName : authGlobalGetters.userName
+      isAuthenticated : "auth/IS_AUTHENTICATED",
+      userName : "auth/USER_NAME"
     })
   },
   methods:{
     ...mapActions({
-      logout : authGlobalActions.logout
+      logout : "auth/LOGOUT"
     }),
     onLogout(){
       this.logout();
@@ -83,5 +72,8 @@ export default {
 }
 .title{
   margin-left: 10px;
+}
+.user-name-icon{
+  margin-right: 3px;
 }
 </style>

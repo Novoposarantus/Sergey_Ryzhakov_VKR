@@ -19,7 +19,9 @@ namespace Domain.Repositories
                 {
                     return context.Tests
                         .Include(test => test.Questions)
-                        .ThenInclude(question => question.Answers);
+                        .ThenInclude(question => question.Answers)
+                        .Include(test => test.Questions)
+                        .ThenInclude(question => question.QuestionTypeId);
                 }
             }
         }

@@ -8,8 +8,8 @@ namespace Models.Models
         public int Id { get; set; }
         public string Text { get; set; }
 
-        [ForeignKey("QuestinTypeModel")]
-        public int QuestinTypeId { get; set; }
+        [ForeignKey("QuestionTypeModel")]
+        public int QuestionTypeId { get; set; }
         public QuestionTypeModel Type { get; set; }
         public IEnumerable<AnswerModel> Answers { get; set; }
     }

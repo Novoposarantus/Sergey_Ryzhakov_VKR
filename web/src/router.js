@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 
 import LoginView from '@/views/auth/LoginView';
 import RegistrationView from '@/views/auth/RegistrationView';
+import CreateTests from '@/views/CreateTestsView';
+import QuestionsList from '@/views/QuestionsList';
 
 import {
     routeNames
@@ -55,7 +57,25 @@ export function createRouter (store) {
                     if(!ifNotAuthenticated(next)) return;
                     next();
                 }
-            }
+            },
+            {
+                path: '/create-tests',
+                name: routeNames.CreateTests,
+                component :  CreateTests,
+                beforeEnter: (_to, _from, next) => {
+                    if(!ifAuthenticated(next)) return;
+                    next();
+                }  
+            },
+            {
+                path: '/questions-list',
+                name: routeNames.QuestionList,
+                component :  QuestionsList,
+                beforeEnter: (_to, _from, next) => {
+                    if(!ifAuthenticated(next)) return;
+                    next();
+                }  
+            },
         ]
     });
 }

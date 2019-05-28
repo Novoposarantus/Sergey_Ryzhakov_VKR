@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {auth} from './auth';
+import {testList} from './testList';
+import {toolbar} from './toolbar';
 
 import {
     defaultVuex
@@ -9,7 +11,9 @@ import {
 Vue.use(Vuex);
 
 const modules = {
-    auth
+    auth,
+    testList,
+    toolbar
 }
 
 export function createStore() {

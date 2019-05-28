@@ -1,5 +1,7 @@
 <template>
   <v-toolbar app>
+    <v-toolbar-side-icon @click.stop="changeDrawer()"></v-toolbar-side-icon>
+    <v-toolbar-title>ВКР</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
         <v-btn
@@ -56,7 +58,8 @@ export default {
   },
   methods:{
     ...mapActions({
-      logout : "auth/LOGOUT"
+      logout : "auth/LOGOUT",
+      changeDrawer : "toolbar/CHANGE_DRAWER"
     }),
     onLogout(){
       this.logout();

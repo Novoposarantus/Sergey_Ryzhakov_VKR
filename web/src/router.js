@@ -1,33 +1,42 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import LoginView from '@/views/auth/LoginView';
-import RegistrationView from '@/views/auth/RegistrationView';
-import CreateTests from '@/views/CreateTestsView';
-import QuestionsList from '@/views/QuestionsList';
+import LoginView from '@/views/auth/LoginView.vue';
+import RegistrationView from '@/views/auth/RegistrationView.vue';
+import TestsList from '@/views/TestsListView.vue';
 
 import {
-    routeNames
+    routeNames,
+    roles
 } from './support';
 
 Vue.use(VueRouter);
 
 export function createRouter (store) {
-    function ifNotAuthenticated(next){
-        if (store.getters["auth/IS_AUTHENTICATED"]) {
-            next({name: routeNames.StartGallery});
-            return false;
-        }
-        return true;
-    }
- 
-    function ifAuthenticated(next){
+    function isNotAuthenticated(next){
         if (!store.getters["auth/IS_AUTHENTICATED"]) {
             next({name: routeNames.Login});
-            return false;
+            return true;
         }
     
-        return true;
+        return false;
+    }
+ 
+    function isAuthenticated(next){
+        if (store.getters["auth/IS_AUTHENTICATED"]) {
+            next({name: routeNames.StartGallery});
+            return true;
+        }
+        return false;
+    }
+
+    function isInRole(next, ...roles){
+        let roleId = store.getters["auth/ROLE_ID"];
+        if(roleId && roles.includes(roleId)){
+            return true;
+        }
+        next({name: routeNames.Login});
+        return false;
     }
 
     return new VueRouter({
@@ -36,16 +45,20 @@ export function createRouter (store) {
             {
                 path: '/',
                 name : routeNames.Start,
-                redirect: () =>({
-                    name: routeNames.StartGallery
-                })
+                redirect: () => {
+                    return {
+                        name: store.getters["auth/IS_AUTHENTICATED"]
+                        ? routeNames.TestsList
+                        : routeNames.Login
+                    }
+                }
             },
             {
                 path: '/login',
                 name: routeNames.Login,
                 component :  LoginView,
                 beforeEnter: (_to, _from, next) => {
-                    if(!ifNotAuthenticated(next)) return;
+                    if(isAuthenticated(next)) return;
                     next();
                 }
             },
@@ -54,28 +67,21 @@ export function createRouter (store) {
                 name: routeNames.Registration,
                 component :  RegistrationView,
                 beforeEnter: (_to, _from, next) => {
-                    if(!ifNotAuthenticated(next)) return;
+                    if(isAuthenticated(next)) return;
                     next();
                 }
             },
             {
-                path: '/create-tests',
-                name: routeNames.CreateTests,
-                component :  CreateTests,
-                beforeEnter: (_to, _from, next) => {
-                    if(!ifAuthenticated(next)) return;
+                path: '/tests-list',
+                name: routeNames.TestsList,
+                component :  TestsList,
+                beforeEnter: async (_to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!isInRole(next, roles.admin)) return;
+                    await store.dispatch("testList/GET");
                     next();
                 }  
-            },
-            {
-                path: '/questions-list',
-                name: routeNames.QuestionList,
-                component :  QuestionsList,
-                beforeEnter: (_to, _from, next) => {
-                    if(!ifAuthenticated(next)) return;
-                    next();
-                }  
-            },
+            }
         ]
     });
 }

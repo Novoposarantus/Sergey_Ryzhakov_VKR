@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
+      <app-navigation></app-navigation>
       <app-header></app-header>
       <v-content>
           <router-view></router-view>
@@ -13,12 +14,14 @@
 <script>
 import AppHeader from './components/layout/AppHeader';
 import AppFooter from './components/layout/AppFooter';
+import AppNavigation from './components/layout/AppNavigation';
 
 export default {
   name: 'app',
   components:{
     AppHeader,
-    AppFooter
+    AppFooter,
+    AppNavigation
   },
   async beforeMount(){
     if(this.$store.getters["auth/IS_AUTHENTICATED"]){

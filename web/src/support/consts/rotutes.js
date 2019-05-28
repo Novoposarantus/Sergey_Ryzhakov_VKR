@@ -1,7 +1,7 @@
 export const routeNames = {
     Start: 'Start',
     Login: 'Login',
+    Profile: 'Profile',
     Registration: 'Registration',
-    CreateTests: 'CreateTests',
-    QuestionList: 'QuestionList'
+    TestsList: 'TestsList'
 }

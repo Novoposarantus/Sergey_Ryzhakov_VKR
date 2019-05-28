@@ -26,9 +26,8 @@ export const auth = {
         "AUTH_SUCCESS": (state) => {
             state.isAuthenticated = true;
         },
-        "AUTH_ERROR": (state, error = 'Что-то пошло не так. Повторите попытку позже.') => {
+        "AUTH_ERROR": (state) => {
             state.isAuthenticated = false;
-            state.error = error;
             Cookie.remove('user-token');
         },
         "AUTH_LOGOUT": (state)=>{
@@ -49,7 +48,7 @@ export const auth = {
     actions:{
         ...defaultVuex.actions,
         "AUTHENTICATION" : async ({commit, dispatch}, user)=>{
-            commit(defaultVuex.mutations.startLoading);
+            commit(defaultVuex.mutationsNames.startLoading);
             try {
                 const {json} = await request(process.env.VUE_APP_AUTHENTICATION, 'POST', user);
                 dispatch("LOGOUT");
@@ -59,16 +58,19 @@ export const auth = {
                     roleId : json.roleId
                 })
                 commit("AUTH_SUCCESS");
+                commit(defaultVuex.mutationsNames.finishLoading);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 401){
                     commit("AUTH_ERROR");
+                    commit(defaultVuex.mutationsNames.setError);
                 }
                 else{
-                    commit("AUTH_ERROR", error.response.data);
+                    commit("AUTH_ERROR");
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
                 }
                 Cookie.remove('user-token');
-                commit(defaultVuex.mutations.finishLoading);
+                commit(defaultVuex.mutationsNames.finishLoading);
             }
         },
         "LOGOUT" : ({commit, dispatch}) => {
@@ -76,36 +78,40 @@ export const auth = {
             dispatch("CLEAR_STORE", null , {root: true})
         },
         "REGISTER" : async ({commit}, user)=>{
-            commit(defaultVuex.mutations.startLoading);
+            commit(defaultVuex.mutationsNames.startLoading);
             try {
                 await request(process.env.VUE_APP_USERS, 'POST', user);
-                commit(defaultVuex.mutations.finishLoading);
+                commit(defaultVuex.mutationsNames.finishLoading);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 401){
                     commit("AUTH_ERROR");
+                    commit(defaultVuex.mutationsNames.setError);
                 }
                 else{
-                    commit("AUTH_ERROR", error.response.data);
+                    commit("AUTH_ERROR");
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
                 }
-                commit(defaultVuex.mutations.finishLoading);
+                commit(defaultVuex.mutationsNames.finishLoading);
             }
         },
         "LOAD_USER_DATA" : async ({commit}) => {
-            commit(defaultVuex.mutations.startLoading);
+            commit(defaultVuex.mutationsNames.startLoading);
             try {
                 const {json} = await request(process.env.VUE_APP_USERS, 'GET');
                 commit("SET_AUTH_INFO", json);
-                commit(defaultVuex.mutations.finishLoading);
+                commit(defaultVuex.mutationsNames.finishLoading);
             }
             catch (error) {
                 if(!error.response || error.response.status !== 400){
                     commit("AUTH_ERROR");
+                    commit(defaultVuex.mutationsNames.setError);
                 }
                 else{
                     commit("AUTH_ERROR", error.response.data);
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
                 }
-                commit(defaultVuex.mutations.finishLoading);
+                commit(defaultVuex.mutationsNames.finishLoading);
             }
         }
     }

@@ -4,6 +4,7 @@ using Models.Models;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using Models.DtoModels;
 
 namespace Domain.Repositories
 {
@@ -23,6 +24,14 @@ namespace Domain.Repositories
                         .Include(test => test.Questions)
                         .ThenInclude(question => question.QuestionTypeId);
                 }
+            }
+        }
+
+        public IEnumerable<TestListItemDto> TestListItemDtos
+        {
+            get
+            {
+                return Tests.Select(test => new TestListItemDto(test));
             }
         }
 

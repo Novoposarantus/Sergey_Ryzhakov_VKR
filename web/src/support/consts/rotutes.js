@@ -4,5 +4,7 @@ export const routeNames = {
     Profile: 'Profile',
     Registration: 'Registration',
     TestsList: 'TestsList',
-    QuestionsList: 'QuestionsList'
+    QuestionsList: 'QuestionsList',
+    QuestionEdit: 'QuestionEdit',
+    QuestionEditId: 'QuestionEditId'
 }

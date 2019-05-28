@@ -6,8 +6,8 @@ namespace Domain.Interfaces
 {
     public interface ITestRepository
     {
-        IEnumerable<TestModel> Tests { get; }
-        IEnumerable<TestListItemDto> TestListItemDtos { get; }
+        List<TestModel> Tests { get; }
+        List<TestListItemDto> TestListItemDtos { get; }
         TestModel GetTest(int id);
     }
 }

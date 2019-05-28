@@ -33,6 +33,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import {routeNames} from '@/support';
 export default {
     data () {
         return {
@@ -64,10 +65,10 @@ export default {
     },
     methods:{
         editQuestion(question){
-            console.log(question);
+            this.$router.push({name: routeNames.QuestionEditId, params: { id : question.id }})
         },
         createNewQuestion(){
-
+            this.$router.push({name: routeNames.QuestionEdit})
         }
     }
 }

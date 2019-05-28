@@ -11,13 +11,13 @@ namespace Domain.Repositories
     public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
-        public IEnumerable<UserModel> Users
+        public List<UserModel> Users
         {
             get
             {
                 using (var context = ContextFactory.CreateDbContext(ConnectionString))
                 {
-                    return context.Users.Include(user => user.Role);
+                    return context.Users.Include(user => user.Role).ToList();
                 }
             }
         }

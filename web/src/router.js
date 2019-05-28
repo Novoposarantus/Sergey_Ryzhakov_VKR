@@ -5,6 +5,7 @@ import LoginView from '@/views/auth/LoginView.vue';
 import RegistrationView from '@/views/auth/RegistrationView.vue';
 import TestsList from '@/views/TestsListView.vue';
 import QuestionsListView from '@/views/QuestionsListView.vue';
+import EditQuestionView from '@/views/EditQuestionView.vue';
 
 import {
     routeNames,
@@ -117,7 +118,29 @@ export function createRouter (store) {
                     await store.dispatch("questionsList/GET");
                     next();
                 }  
-            }
+            },
+            {
+                path: '/edit-question',
+                name: routeNames.QuestionEdit,
+                component :  EditQuestionView,
+                beforeEnter: async (_to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.admin))) return;
+                    await store.dispatch("questionEdit/GET_EMPTY");
+                    next();
+                }  
+            },
+            {
+                path: '/edit-question/:id',
+                name: routeNames.QuestionEditId,
+                component :  EditQuestionView,
+                beforeEnter: async (to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.admin))) return;
+                    await store.dispatch("questionEdit/GET", to.params.id);
+                    next();
+                }  
+            },
         ]
     });
 }

@@ -8,7 +8,11 @@ namespace Domain.Interfaces
 {
     public interface IQuestionRepository
     {
-        IEnumerable<QuestionModel> Questions { get; }
-        IEnumerable<QuestionListItemDto> QuestionListItemDtos { get; }
+        List<QuestionModel> Questions { get; }
+        List<QuestionListItemDto> QuestionListItemDtos { get; }
+        List<QuestionTypeModel> Types { get; }
+        QuestionModel GetQuestion(int id);
+        void SaveQuestion(QuestionModel question);
+        QuestionTypeModel SaveQuestionType(string name);
     }
 }

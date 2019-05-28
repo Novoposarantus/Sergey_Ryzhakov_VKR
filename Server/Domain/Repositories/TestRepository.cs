@@ -12,7 +12,7 @@ namespace Domain.Repositories
     {
         public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
 
-        public IEnumerable<TestModel> Tests
+        public List<TestModel> Tests
         {
             get
             {
@@ -22,14 +22,15 @@ namespace Domain.Repositories
                         .Include(test => test.Questions)
                         .ThenInclude(question => question.Answers)
                         .Include(test => test.Questions)
-                        .ThenInclude(question => question.QuestionTypeId);
+                        .ThenInclude(question => question.QuestionTypeId)
+                        .ToList();
                 }
             }
         }
 
-        public IEnumerable<TestListItemDto> TestListItemDtos
+        public List<TestListItemDto> TestListItemDtos
         {
-            get => Tests.Select(test => new TestListItemDto(test));
+            get => Tests.Select(test => new TestListItemDto(test)).ToList();
         }
 
         public TestModel GetTest(int id)

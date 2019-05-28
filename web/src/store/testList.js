@@ -1,6 +1,7 @@
 import {
     request,
-    defaultVuex
+    defaultVuex,
+    url
 } from '../support';
 
 export const testList = {
@@ -43,7 +44,7 @@ export const testList = {
         "GET" : async ({commit})=>{
             commit(defaultVuex.mutationsNames.startLoading);
             try {
-                const {json} = await request(process.env.VUE_TESTS, 'GET');
+                const {json} = await request(url.tests, 'GET');
                 commit("SET", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
             }

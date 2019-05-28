@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Models.Enums.Internal;
+using Models.Models;
 
 namespace API.Controllers
 {
@@ -21,9 +22,30 @@ namespace API.Controllers
         {
             _questionRepository = questionRepository;
         }
+
+        [HttpGet]
         public IActionResult Get()
         {
             return Ok(_questionRepository.QuestionListItemDtos);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            return Ok(_questionRepository.GetQuestion(id));
+        }
+
+        [HttpPost]
+        public IActionResult Post(QuestionModel question)
+        {
+            _questionRepository.SaveQuestion(question);
+            return Ok();
+        }
+
+        //[HttpPut]
+        //public IActionResult Put(QuestionModel question)
+        //{
+        //    return Ok(_questionRepository.SaveQuestion(question));
+        //}
     }
 }

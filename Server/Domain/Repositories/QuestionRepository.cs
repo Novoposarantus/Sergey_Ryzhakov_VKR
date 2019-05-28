@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Models.DtoModels;
+using Models.Exceptions;
 
 namespace Domain.Repositories
 {
@@ -12,7 +13,7 @@ namespace Domain.Repositories
     {
         public QuestionRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
 
-        public IEnumerable<QuestionModel> Questions
+        public List<QuestionModel> Questions
         {
             get
             {
@@ -20,28 +21,46 @@ namespace Domain.Repositories
                 {
                     return context.Questions
                         .Include(question => question.Answers)
-                        .Include(question => question.QuestionTypeId);
+                        .Include(question => question.Type)
+                        .ToList();
                 }
             }
         }
 
-        public IEnumerable<QuestionListItemDto> QuestionListItemDtos
+        public List<QuestionListItemDto> QuestionListItemDtos
         {
-            get => Questions.Select(question => new QuestionListItemDto(question));
+            get => Questions.Select(question => new QuestionListItemDto(question)).ToList();
+        }
+
+        public List<QuestionTypeModel> Types
+        {
+            get
+            {
+                using (var context = ContextFactory.CreateDbContext(ConnectionString))
+                {
+                    return context.QuestionTypes.ToList();
+                }
+            }
         }
 
         public QuestionModel GetQuestion(int id)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                return context.Questions
-                    .Include(question => question.Answers)
-                    .Include(question => question.QuestionTypeId)
-                    .FirstOrDefault(question => question.Id == id);
+                var question = context.Questions
+                    .Include(q => q.Answers)
+                    .Include(q => q.Type)
+                    .FirstOrDefault(q => q.Id == id);
+                if(question == null)
+                {
+                    throw new QuestionRepositoryException("Вопроса не существует.");
+                }
+                return question;
             }
         }
 
-        public QuestionModel SaveQuestion(QuestionModel question)
+
+        public void SaveQuestion(QuestionModel question)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -62,7 +81,22 @@ namespace Domain.Repositories
                     context.Add(answer);
                 }
                 context.SaveChanges();
-                return GetQuestion(saveQuestion.Entity.Id);
+            }
+        }
+
+        public QuestionTypeModel SaveQuestionType(string name)
+        {
+            var type = Types.FirstOrDefault(t => t.Name == name);
+            if (type != null)
+            {
+                return type;
+            }
+
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var newType = context.QuestionTypes.Add(new QuestionTypeModel() { Name = name });
+                context.SaveChanges();
+                return newType.Entity;
             }
         }
     }

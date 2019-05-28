@@ -1,7 +1,8 @@
 import Cookie from 'js-cookie';
 import {
     request,
-    defaultVuex
+    defaultVuex,
+    url
 } from '../support';
 
 export const auth = {
@@ -51,7 +52,7 @@ export const auth = {
         "AUTHENTICATION" : async ({commit, dispatch}, user)=>{
             commit(defaultVuex.mutationsNames.startLoading);
             try {
-                const {json} = await request(process.env.VUE_APP_AUTHENTICATION, 'POST', user);
+                const {json} = await request(url.authentication, 'POST', user);
                 dispatch("LOGOUT");
                 Cookie.set('user-token', json.access_token, { expires: json.timeOut * 60 });
                 commit("SET_AUTH_INFO", {
@@ -81,7 +82,7 @@ export const auth = {
         "REGISTER" : async ({commit}, user)=>{
             commit(defaultVuex.mutationsNames.startLoading);
             try {
-                await request(process.env.VUE_APP_USERS, 'POST', user);
+                await request(url.users, 'POST', user);
                 commit(defaultVuex.mutationsNames.finishLoading);
             }
             catch (error) {
@@ -99,7 +100,7 @@ export const auth = {
         "LOAD_USER_DATA" : async ({commit}) => {
             commit(defaultVuex.mutationsNames.startLoading);
             try {
-                const {json} = await request(process.env.VUE_APP_USERS, 'GET');
+                const {json} = await request(url.users, 'GET');
                 commit("SET_AUTH_INFO", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
             }

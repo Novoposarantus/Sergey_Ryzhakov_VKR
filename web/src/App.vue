@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <app-navigation></app-navigation>
+      <app-navigation v-if="isAuthenticated"></app-navigation>
       <app-header></app-header>
       <v-content>
           <router-view></router-view>
@@ -15,6 +15,7 @@
 import AppHeader from './components/layout/AppHeader';
 import AppFooter from './components/layout/AppFooter';
 import AppNavigation from './components/layout/AppNavigation';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'app',
@@ -22,6 +23,11 @@ export default {
     AppHeader,
     AppFooter,
     AppNavigation
+  },
+  computed:{
+    ...mapGetters({
+      isAuthenticated: 'auth/IS_AUTHENTICATED',
+    })
   },
   async beforeMount(){
     if(this.$store.getters["auth/IS_AUTHENTICATED"]){

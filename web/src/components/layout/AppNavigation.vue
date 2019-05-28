@@ -21,7 +21,7 @@
             <v-list-tile-title>Тесты</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile @click="toQuestions()">
           <v-list-tile-action>
             <v-icon>fas fa-question-circle</v-icon>
           </v-list-tile-action>
@@ -35,7 +35,7 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {routes} from '@/support';
+import {routeNames} from '@/support';
 export default {
     computed:{
         ...mapGetters({
@@ -53,10 +53,13 @@ export default {
             changeDrawer : "toolbar/CHANGE_DRAWER"
         }),
         // toProfile(){
-        //   this.$roter.push(`./${routes.Profile}`);
+        //   this.$router.push({name: routeNames.Profile});
         // },
         toTests(){
-          this.$roter.push(`./${routes.TestsList}`);
+          this.$router.push({name: routeNames.TestsList});
+        },
+        toQuestions(){
+          this.$router.push({name: routeNames.QuestionsList});
         }
     },
 }

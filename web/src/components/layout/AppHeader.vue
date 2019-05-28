@@ -1,6 +1,6 @@
 <template>
   <v-toolbar app>
-    <v-toolbar-side-icon @click.stop="changeDrawer()"></v-toolbar-side-icon>
+    <v-toolbar-side-icon v-if="isAuthenticated" @click.stop="changeDrawer()"></v-toolbar-side-icon>
     <v-toolbar-title>ВКР</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>

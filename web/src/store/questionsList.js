@@ -3,39 +3,38 @@ import {
     defaultVuex
 } from '../support';
 
-export const testList = {
+export const questionsList = {
     namespaced: true,
     state:{
         ...defaultVuex.state,
-        tests : [],
+        questions : [],
     },
     getters:{
         ...defaultVuex.getters,
-        "TESTS"    : (state) => state.tests
+        "QUESTIONS"    : (state) => state.questions
     },
     mutations:{
         ...defaultVuex.mutations,
-        "SET": (state, tests) => {
-            state.tests = [
-                ...tests
+        "SET": (state, questions) => {
+            state.questions = [
+                ...questions
             ];
         },
-        "PUSH": (state, test) => {
-            state.tests.push(test);
+        "PUSH": (state, question) => {
+            state.questions.push(question);
         },
-        "REMOVE": (state, test) =>{
-            let index = state.tests.indexOf(test);
-            state.tests.splice(index, 1);
+        "REMOVE": (state, question) =>{
+            let index = state.tests.indexOf(question);
+            state.questions.splice(index, 1);
         },
-        "REMOVE_BY_ID": (state, testId) => {
-            var test = state.tests.find(t=> t.Id == testId);
-            let index = state.tests.indexOf(test);
-            state.tests.splice(index, 1);
+        "REMOVE_BY_ID": (state, questionId) => {
+            var question = state.tests.find(t=> t.Id == questionId);
+            let index = state.questions.indexOf(question);
+            state.questions.splice(index, 1);
         },
-        
         "CLEAR": (state) => {
             defaultVuex.clear(state);
-            state.tests = [];
+            state.questions = [];
         }
     },
     actions:{
@@ -43,7 +42,7 @@ export const testList = {
         "GET" : async ({commit})=>{
             commit(defaultVuex.mutationsNames.startLoading);
             try {
-                const {json} = await request(process.env.VUE_TESTS, 'GET');
+                const {json} = await request(process.env.VUE_CREATE_TESTS, 'GET');
                 commit("SET", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
             }

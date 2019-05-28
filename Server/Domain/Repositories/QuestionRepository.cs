@@ -4,6 +4,7 @@ using Models.Models;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using Models.DtoModels;
 
 namespace Domain.Repositories
 {
@@ -22,6 +23,11 @@ namespace Domain.Repositories
                         .Include(question => question.QuestionTypeId);
                 }
             }
+        }
+
+        public IEnumerable<QuestionListItemDto> QuestionListItemDtos
+        {
+            get => Questions.Select(question => new QuestionListItemDto(question));
         }
 
         public QuestionModel GetQuestion(int id)

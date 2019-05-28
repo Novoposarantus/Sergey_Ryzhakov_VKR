@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import {auth} from './auth';
 import {testList} from './testList';
 import {toolbar} from './toolbar';
+import {questionsList} from './questionsList';
 
 import {
     defaultVuex
@@ -13,7 +14,8 @@ Vue.use(Vuex);
 const modules = {
     auth,
     testList,
-    toolbar
+    toolbar,
+    questionsList
 }
 
 export function createStore() {
@@ -22,7 +24,7 @@ export function createStore() {
         actions:{
             "CLEAR_STORE" : ({commit}) => {
                 for(let moduleName in modules){
-                    commit(`${moduleName}/${defaultVuex.clear}`);
+                    commit(`${moduleName}/${defaultVuex.mutationsNames.clear}`);
                 }
             }
         }

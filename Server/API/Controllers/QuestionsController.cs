@@ -23,7 +23,7 @@ namespace API.Controllers
         }
         public IActionResult Get()
         {
-            return Ok(_questionRepository.Questions);
+            return Ok(_questionRepository.QuestionListItemDtos);
         }
     }
 }

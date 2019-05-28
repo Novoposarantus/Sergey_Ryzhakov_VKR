@@ -13,13 +13,14 @@ export const auth = {
     },
     getters:{
         ...defaultVuex.getters,
-        "IS_AUTHENTICATED"    : (state) => state.isAuthenticated,
-        "USER_NAME"           : (state) => state.userData 
+        "IS_AUTHENTICATED"  : (state) => state.isAuthenticated,
+        "USER_NAME"         : (state) => state.userData 
                                 ? state.userData.userName 
                                 : null,
-        "ROLE_ID"             : (state) => state.userData
+        "ROLE_ID"           : (state) => state.userData
                                 ? state.userData.roleId 
                                 : null,
+        "AUTH_INFO_LOADED"  : (state) => !!state.userData
     },
     mutations:{
         ...defaultVuex.mutations,

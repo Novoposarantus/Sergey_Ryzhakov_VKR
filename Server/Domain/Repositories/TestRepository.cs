@@ -29,10 +29,7 @@ namespace Domain.Repositories
 
         public IEnumerable<TestListItemDto> TestListItemDtos
         {
-            get
-            {
-                return Tests.Select(test => new TestListItemDto(test));
-            }
+            get => Tests.Select(test => new TestListItemDto(test));
         }
 
         public TestModel GetTest(int id)

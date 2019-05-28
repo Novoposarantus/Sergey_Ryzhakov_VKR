@@ -3,5 +3,6 @@ export const routeNames = {
     Login: 'Login',
     Profile: 'Profile',
     Registration: 'Registration',
-    TestsList: 'TestsList'
+    TestsList: 'TestsList',
+    QuestionsList: 'QuestionsList'
 }

@@ -9,7 +9,8 @@ export const toolbar = {
     mutations:{
         "CHANGE_DRAWER": (state) => {
             state.drawer = !state.drawer;
-        }
+        },
+        "CLEAR" : () => {}
     },
     actions:{
         "CHANGE_DRAWER" :  ({commit})=>{

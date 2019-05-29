@@ -5,12 +5,12 @@ namespace Models.DtoModels
 {
     public class QuestionListItemDto
     {
-        public QuestionListItemDto(QuestionModel model)
+        public QuestionListItemDto(SimpleQuestionModel model)
         {
             Id = model.Id;
             Text = model.Text;
             TypeId = model.QuestionTypeId;
-            TypeName = model.Type.Name;
+            TypeName = model.QuestionType.Name;
             AnswersCount = model.Answers.Count();
             RightAnswersCount = model.Answers.Where(answer => answer.IsRight).Count();
         }

@@ -15,9 +15,20 @@ namespace Domain.Context
         public DbSet<QuestionTypeModel> QuestionTypes { get; set; }
         public DbSet<UserAnswerModel> UserAnswers { get; set; }
         public DbSet<TestModel> Tests { get; set; }
+        public DbSet<QuestionToTestModel> QuestionToTests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<QuestionToTestModel>()
+                .HasOne(bc => bc.Test)
+                .WithMany(b => b.QuestionToTests)
+                .HasForeignKey(bc => bc.TestId);
+
+            modelBuilder.Entity<QuestionToTestModel>()
+                .HasOne(bc => bc.Question)
+                .WithMany(b => b.QuestionToTests)
+                .HasForeignKey(bc => bc.QuestionId);
 
             modelBuilder.Entity<RoleModel>().HasData(
                 new RoleModel() { Id = 1, Name = "admin" },

@@ -42,10 +42,11 @@ namespace API.Controllers
             return Ok();
         }
 
-        //[HttpPut]
-        //public IActionResult Put(QuestionModel question)
-        //{
-        //    return Ok(_questionRepository.SaveQuestion(question));
-        //}
+        [HttpPut]
+        public IActionResult Put(QuestionModel question)
+        {
+            _questionRepository.UpdateQuestion(question);
+            return Ok();
+        }
     }
 }

@@ -8,11 +8,12 @@ namespace Domain.Interfaces
 {
     public interface IQuestionRepository
     {
-        List<QuestionModel> Questions { get; }
+        List<SimpleQuestionModel> Questions { get; }
         List<QuestionListItemDto> QuestionListItemDtos { get; }
         List<QuestionTypeModel> Types { get; }
-        QuestionModel GetQuestion(int id);
+        SimpleQuestionModel GetQuestion(int id);
         void SaveQuestion(QuestionModel question);
+        void UpdateQuestion(QuestionModel question);
         QuestionTypeModel SaveQuestionType(string name);
     }
 }

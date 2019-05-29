@@ -45,7 +45,7 @@ export default {
             get: function () {
                 return this.vuexDraver;
             },
-            set: () => {}
+            set: function (event) {this.changeDrawer(event)}
         }
     },
     methods: {

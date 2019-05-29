@@ -8,6 +8,6 @@ namespace Models.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<QuestionModel> Questions { get; set; }
+        public IEnumerable<QuestionToTestModel> QuestionToTests { get; set; }
     }
 }

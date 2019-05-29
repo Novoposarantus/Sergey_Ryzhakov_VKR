@@ -1,7 +1,8 @@
 import {
     request,
     defaultVuex,
-    url
+    url,
+    emptyQuestion
 } from '../support';
 
 export const questionEdit = {
@@ -30,7 +31,7 @@ export const questionEdit = {
             ];
         },
         "ADD_QUESTION_TYPE": (state, questionType) =>{
-            var oldQT = state.find(qT => qT.id == questionType.id);
+            var oldQT = state.questionTypes.find(qT => qT.id == questionType.id);
             if(oldQT){
                 var index = state.questionTypes.indexOf(oldQT);
                 state.questionTypes(index, 1, questionType);
@@ -71,13 +72,41 @@ export const questionEdit = {
             //try {
                 let {json} = await request(url.questionsTypes, 'GET');
                 commit("SET_QUESTION_TYPES", json);
-                commit("SET_QUESTION",
-                {
-                    id: null,
-                    text: "",
-                    questionTypeId: json.length > 0 ?  json[0].id : null,
-                    answers: []
-                })
+                commit("SET_QUESTION", {...emptyQuestion});
+                commit(defaultVuex.mutationsNames.finishLoading);
+            // }
+            // catch (error) {
+            //     if(!error.response || error.response.status !== 400){
+            //         commit(defaultVuex.mutationsNames.setError);
+            //     }
+            //     else
+            //     {
+            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
+            //     }
+            //     commit(defaultVuex.mutationsNames.finishLoading);
+            // }
+        },
+        "SAVE" : async ({commit}, question) => {
+            commit(defaultVuex.mutationsNames.startLoading);
+            //try {
+                await request(url.questions, 'POST', question);
+                commit(defaultVuex.mutationsNames.finishLoading);
+            // }
+            // catch (error) {
+            //     if(!error.response || error.response.status !== 400){
+            //         commit(defaultVuex.mutationsNames.setError);
+            //     }
+            //     else
+            //     {
+            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
+            //     }
+            //     commit(defaultVuex.mutationsNames.finishLoading);
+            // }
+        },
+        "UPDATE" : async ({commit}, question) => {
+            commit(defaultVuex.mutationsNames.startLoading);
+            //try {
+                await request(url.questions, 'PUT', question);
                 commit(defaultVuex.mutationsNames.finishLoading);
             // }
             // catch (error) {
@@ -109,5 +138,6 @@ export const questionEdit = {
             //     commit(defaultVuex.mutationsNames.finishLoading);
             // }
         },
+
     }
 };

@@ -12,17 +12,20 @@ namespace Domain.Repositories
     {
         public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
 
-        public List<TestModel> Tests
+        public List<SimpleTestModel> Tests
         {
             get
             {
                 using (var context = ContextFactory.CreateDbContext(ConnectionString))
                 {
                     return context.Tests
-                        .Include(test => test.Questions)
+                        .Include(test => test.QuestionToTests)
+                        .ThenInclude(questionToTest => questionToTest.Question)
                         .ThenInclude(question => question.Answers)
-                        .Include(test => test.Questions)
-                        .ThenInclude(question => question.QuestionTypeId)
+                        .Include(test => test.QuestionToTests)
+                        .ThenInclude(questionToTest => questionToTest.Question)
+                        .ThenInclude(question => question.QuestionType)
+                        .Select(test => new SimpleTestModel(test))
                         .ToList();
                 }
             }
@@ -33,14 +36,19 @@ namespace Domain.Repositories
             get => Tests.Select(test => new TestListItemDto(test)).ToList();
         }
 
-        public TestModel GetTest(int id)
+        public SimpleTestModel GetTest(int id)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                return context.Tests
-                    .Include(test => test.Questions)
-                    .ThenInclude(question => question.Answers)
-                    .FirstOrDefault(test => test.Id == id);
+                var test =  context.Tests
+                        .Include(t => t.QuestionToTests)
+                        .ThenInclude(questionToTest => questionToTest.Question)
+                        .ThenInclude(question => question.Answers)
+                        .Include(t => t.QuestionToTests)
+                        .ThenInclude(questionToTest => questionToTest.Question)
+                        .ThenInclude(question => question.QuestionType)
+                        .FirstOrDefault(t => t.Id == id);
+                return new SimpleTestModel(test);
             }
         }
     }

@@ -46,19 +46,32 @@ namespace Domain.Migrations
 
                     b.Property<int>("QuestionTypeId");
 
-                    b.Property<int?>("TestModelId");
-
                     b.Property<string>("Text");
-
-                    b.Property<int?>("TypeId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestModelId");
-
-                    b.HasIndex("TypeId");
+                    b.HasIndex("QuestionTypeId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("Models.Models.QuestionToTestModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("QuestionId");
+
+                    b.Property<int>("TestId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("QuestionToTests");
                 });
 
             modelBuilder.Entity("Models.Models.QuestionTypeModel", b =>
@@ -182,13 +195,23 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Models.Models.QuestionModel", b =>
                 {
-                    b.HasOne("Models.Models.TestModel")
-                        .WithMany("Questions")
-                        .HasForeignKey("TestModelId");
-
-                    b.HasOne("Models.Models.QuestionTypeModel", "Type")
+                    b.HasOne("Models.Models.QuestionTypeModel", "QuestionType")
                         .WithMany()
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("QuestionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Models.Models.QuestionToTestModel", b =>
+                {
+                    b.HasOne("Models.Models.QuestionModel", "Question")
+                        .WithMany("QuestionToTests")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Models.Models.TestModel", "Test")
+                        .WithMany("QuestionToTests")
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Models.Models.UserAnswerModel", b =>

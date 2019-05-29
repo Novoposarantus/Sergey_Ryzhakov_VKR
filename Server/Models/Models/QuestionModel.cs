@@ -7,11 +7,10 @@ namespace Models.Models
     {
         public int Id { get; set; }
         public string Text { get; set; }
-
-        [ForeignKey("QuestionTypeModel")]
         public int QuestionTypeId { get; set; }
-        public QuestionTypeModel Type { get; set; }
+        public QuestionTypeModel QuestionType { get; set; }
         public IEnumerable<AnswerModel> Answers { get; set; }
+        public IEnumerable<QuestionToTestModel> QuestionToTests { get; set; }
     }
 }
  

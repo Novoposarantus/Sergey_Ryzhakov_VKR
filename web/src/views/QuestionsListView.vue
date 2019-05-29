@@ -15,9 +15,10 @@
             :pagination.sync="pagination"
         >
             <template v-slot:items="props">
-                <td @click="editQuestion(props.item)">{{ props.item.name }}</td>
-                <td class="text-xs-right">{{ props.item.description }}</td>
-                <td class="text-xs-right">{{ props.item.questionsCount }}</td>
+                <td @click="editQuestion(props.item)">{{ props.item.text }}</td>
+                <td class="text-xs">{{ props.item.typeName }}</td>
+                <td class="text-xs">{{ props.item.answersCount }}</td>
+                <td class="text-xs">{{ props.item.rightAnswersCount }}</td>
             </template>
             <template v-slot:no-data>
                 <v-alert :value="true" color="error" icon="warning">
@@ -41,13 +42,10 @@ export default {
             rowsPerPage: 20
         },
         headers: [
-            {
-            text: 'Вопрос',
-            value: 'text'
-            },
+            { text: 'Вопрос', value: 'text' },
             { text: 'Тип', value: 'typeName' },
             { text: 'Количество ответов', value: 'answersCount' },
-            { text: 'Количество правильных ответов', value: 'answersCount' }
+            { text: 'Количество правильных ответов', value: 'rightAnswersCount' }
         ]
         }
     },

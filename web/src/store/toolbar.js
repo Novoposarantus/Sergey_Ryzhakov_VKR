@@ -7,14 +7,19 @@ export const toolbar = {
         "DRAWER" : (state) => state.drawer, 
     },
     mutations:{
-        "CHANGE_DRAWER": (state) => {
-            state.drawer = !state.drawer;
+        "CHANGE_DRAWER": (state, value) => {
+            if(value == null){
+                state.drawer = !state.drawer;
+                return;
+            }
+            if(value == state.drawer) return;
+            state.drawer = value;
         },
         "CLEAR" : () => {}
     },
     actions:{
-        "CHANGE_DRAWER" :  ({commit})=>{
-            commit("CHANGE_DRAWER");
+        "CHANGE_DRAWER" :  ({commit}, value = null)=>{
+            commit("CHANGE_DRAWER", value);
         },
     }
 };

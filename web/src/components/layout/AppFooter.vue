@@ -2,7 +2,6 @@
     <v-footer
         height="auto"
         dark
-        app
       >
         <v-layout>
           <v-flex

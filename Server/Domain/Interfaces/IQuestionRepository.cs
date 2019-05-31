@@ -14,6 +14,7 @@ namespace Domain.Interfaces
         SimpleQuestionModel GetQuestion(int id);
         void SaveQuestion(QuestionModel question);
         void UpdateQuestion(QuestionModel question);
+        void DeleteQuestion(int questionId);
         QuestionTypeModel SaveQuestionType(string name);
     }
 }

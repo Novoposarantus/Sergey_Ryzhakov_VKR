@@ -48,5 +48,11 @@ namespace API.Controllers
             _questionRepository.UpdateQuestion(question);
             return Ok();
         }
+        [HttpDelete("{id}")]
+        public IActionResult Put(int id)
+        {
+            _questionRepository.DeleteQuestion(id);
+            return Ok();
+        }
     }
 }

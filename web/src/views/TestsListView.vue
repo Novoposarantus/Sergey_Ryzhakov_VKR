@@ -25,7 +25,7 @@
                 </v-alert>
             </template>
         </v-data-table>
-        <div class="text-xs-center pt-2">
+        <div class="text-xs-center pt-2" v-if="pages > 1">
             <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
         </div>
     </div>

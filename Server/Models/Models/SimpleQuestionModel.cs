@@ -13,12 +13,12 @@ namespace Models.Models
             Text = model.Text;
             QuestionTypeId = model.QuestionTypeId;
             QuestionType = model.QuestionType;
-            Answers = model.Answers.ToList();
+            Answers = model.Answers.Select(a=>new SimpleAnswerModel(a)).ToList();
         }
         public int Id { get; set; }
         public string Text { get; set; }
         public int QuestionTypeId { get; set; }
         public QuestionTypeModel QuestionType { get; set; }
-        public List<AnswerModel> Answers { get; set; }
+        public List<SimpleAnswerModel> Answers { get; set; }
     }
 }

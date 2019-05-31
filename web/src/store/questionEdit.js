@@ -120,6 +120,23 @@ export const questionEdit = {
             //     commit(defaultVuex.mutationsNames.finishLoading);
             // }
         },
+        "DELETE" : async ({commit}, questionId) => {
+            commit(defaultVuex.mutationsNames.startLoading);
+            //try {
+                await request(url.questions + `/${questionId}`, 'DELETE');
+                commit(defaultVuex.mutationsNames.finishLoading);
+            // }
+            // catch (error) {
+            //     if(!error.response || error.response.status !== 400){
+            //         commit(defaultVuex.mutationsNames.setError);
+            //     }
+            //     else
+            //     {
+            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
+            //     }
+            //     commit(defaultVuex.mutationsNames.finishLoading);
+            // }
+        },
         "SAVE_TYPE" : async ({commit}, typeName) => {
             commit(defaultVuex.mutationsNames.startLoading);
             //try {

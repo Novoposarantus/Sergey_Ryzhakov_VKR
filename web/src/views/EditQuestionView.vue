@@ -1,62 +1,65 @@
 <template>
-    <div>
-        <v-form ref="form">
-            <v-container>
-                <v-toolbar flat color="transparent">
-                    <v-toolbar-title>{{title}}</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn  v-if="showSave"
-                            @click="save()"
-                            color="success" 
-                            dark>
-                        Сохранить
-                    </v-btn>
-                </v-toolbar>
-                <v-text-field
-                    v-model="question.text"
-                    :rules="[v => !!v || 'Поле не моет быть пустым']"
-                    label="Вопрос"
-                    required
-                ></v-text-field>
-                <div>
-                    <v-select
-                        :items="types"
-                        v-model="question.questionTypeId"
-                        label="Тип"
-                        class="select-field"
-                        :rules="[v => !!v || 'Выберите тип вопроса']"
-                    ></v-select>
-                    <question-type-dialog></question-type-dialog>
-                </div>
-                
-                <v-toolbar flat color="transparent">
-                    <v-toolbar-title>Ответы</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn  @click="addAnswer()"
-                            color="primary" 
-                            dark>
-                        Добавить ответ
-                    </v-btn>
-                </v-toolbar>
-                <v-alert
-                    :value="answerAlert"
-                    type="error"
-                    transition="scale-transition"
-                >
-                    Выберите хотя бы 1 правильный ответ.
-                </v-alert>
-                <edit-answer 
-                    v-for="answer in  question.answers"
-                    :key="answer.Id"
-                    :value="answer"
-                    :showDelete="showDeleteAnswer"
-                    @change="answerChange($event)"
-                    @delete="answerDelete($event)"    
-                ></edit-answer>
-            </v-container>
-        </v-form>
-        
-    </div>
+    <v-form ref="form" class="form">
+        <v-container>
+            <v-toolbar flat color="transparent">
+                <v-toolbar-title>{{title}}</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn  v-if="showSave"
+                        @click="save()"
+                        color="success" 
+                        dark>
+                    Сохранить
+                </v-btn>
+                <v-btn  v-if="!isNew"
+                        @click="remove()"
+                        color="error" 
+                        dark>
+                    Удалить
+                </v-btn>
+            </v-toolbar>
+            <v-text-field
+                v-model="question.text"
+                :rules="[v => !!v || 'Поле не моет быть пустым']"
+                label="Вопрос"
+                required
+            ></v-text-field>
+            <div>
+                <v-select
+                    :items="types"
+                    v-model="question.questionTypeId"
+                    label="Тип"
+                    class="select-field"
+                    :rules="[v => !!v || 'Выберите тип вопроса']"
+                ></v-select>
+                <question-type-dialog></question-type-dialog>
+            </div>
+            
+            <v-toolbar flat color="transparent">
+                <v-toolbar-title>Ответы</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn  @click="addAnswer()"
+                        color="primary" 
+                        dark>
+                    Добавить ответ
+                </v-btn>
+            </v-toolbar>
+            <v-alert
+                :value="answerAlert"
+                type="error"
+                transition="scale-transition"
+            >
+                Выберите хотя бы 1 правильный ответ.
+            </v-alert>
+            <edit-answer 
+                v-for="answer in  question.answers"
+                :key="answer.Id"
+                :value="answer"
+                :showDelete="showDeleteAnswer"
+                @change="answerChange($event)"
+                @delete="answerDelete($event)"    
+            ></edit-answer>
+        </v-container>
+    </v-form>
 </template>
 
 <script>
@@ -81,13 +84,13 @@ export default {
             vuexTypes: "questionEdit/TYPES"
         }),
         isNew(){
-            return !(this.$router.params && this.$router.params.id && (this.$router.params.id > 0));
+            return !this.$route.params.id;
         },
         title(){
             if(this.isNew) {
-                return "Редактирование вопроса."
+                return "Создание нового вопроса"
             }
-            return "Создание нового вопроса"
+            return "Редактирование вопроса."
         },
         showSave(){
             return this.question.answers.length >= 4;
@@ -109,6 +112,7 @@ export default {
         ...mapActions({
             saveQuestion : "questionEdit/SAVE",
             updateQuestion : "questionEdit/UPDATE",
+            deleteQuestion : "questionEdit/DELETE"
         }),
         async save(){
             if (!this.$refs.form.validate() || this.rightAnswersCount == 0) {
@@ -135,6 +139,11 @@ export default {
         answerDelete(answer){
             let index = this.question.answers.indexOf(answer);
             this.question.answers.splice(index, 1);
+        },
+        async remove(){
+            if(this.isNew) return;
+            await this.deleteQuestion(this.question.id);
+            this.$router.push({name: routeNames.QuestionsList});
         }
     },
     beforeMount(){
@@ -152,5 +161,8 @@ export default {
 }
 .d-flex{
     display: flex;
+}
+.form{
+    padding: 2rem;
 }
 </style>

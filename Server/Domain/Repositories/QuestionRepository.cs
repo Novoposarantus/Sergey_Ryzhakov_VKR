@@ -75,7 +75,41 @@ namespace Domain.Repositories
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
+                var questionAnsers = context.Answers.Where(a => a.QuestionId == question.Id);
+                foreach(var answer in questionAnsers)
+                {
+                    if(!question.Answers.Any(a=>a.Id == answer.Id))
+                    {
+                        context.Answers.Remove(answer);
+                    }
+                }
+                context.SaveChanges();
+            }
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                question.QuestionType = null;
                 context.Questions.Update(question);
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteQuestion(int questionId)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var question = context.Questions.FirstOrDefault(q => q.Id == questionId);
+                if (question == null)
+                {
+                    return;
+                }
+                var QuestionToTestsWithQuestion = context
+                    .QuestionToTests
+                    .Where(qt => qt.QuestionId == questionId);
+                if (QuestionToTestsWithQuestion.Any())
+                {
+                    context.QuestionToTests.RemoveRange(QuestionToTestsWithQuestion);
+                }
+                context.Questions.Remove(question);
                 context.SaveChanges();
             }
         }

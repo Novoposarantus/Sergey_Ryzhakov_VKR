@@ -5,7 +5,7 @@ namespace Models.DtoModels
 {
     public class TestListItemDto
     {
-        public TestListItemDto(SimpleTestModel model)
+        public TestListItemDto(TestDto model)
         {
             Id = model.Id;
             Name = model.Name;

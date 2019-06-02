@@ -5,7 +5,7 @@ namespace Models.DtoModels
 {
     public class QuestionListItemDto
     {
-        public QuestionListItemDto(SimpleQuestionModel model)
+        public QuestionListItemDto(QuestionDto model)
         {
             Id = model.Id;
             Text = model.Text;

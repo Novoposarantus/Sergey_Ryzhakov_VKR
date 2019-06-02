@@ -13,7 +13,7 @@ namespace Domain.Repositories
     {
         public QuestionRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
 
-        public List<SimpleQuestionModel> Questions
+        public List<QuestionDto> Questions
         {
             get
             {
@@ -22,7 +22,7 @@ namespace Domain.Repositories
                     return context.Questions
                         .Include(question => question.Answers)
                         .Include(question => question.QuestionType)
-                        .Select(question => new SimpleQuestionModel(question))
+                        .Select(question => new QuestionDto(question))
                         .ToList();
                 }
             }
@@ -44,7 +44,7 @@ namespace Domain.Repositories
             }
         }
 
-        public SimpleQuestionModel GetQuestion(int id)
+        public QuestionDto Get(int id)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -56,12 +56,12 @@ namespace Domain.Repositories
                 {
                     throw new QuestionRepositoryException("Вопроса не существует.");
                 }
-                return new SimpleQuestionModel(question);
+                return new QuestionDto(question);
             }
         }
 
 
-        public void SaveQuestion(QuestionModel question)
+        public void Save(QuestionModel question)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -71,7 +71,7 @@ namespace Domain.Repositories
             }
         }
 
-        public void UpdateQuestion(QuestionModel question)
+        public void Update(QuestionModel question)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -93,7 +93,7 @@ namespace Domain.Repositories
             }
         }
 
-        public void DeleteQuestion(int questionId)
+        public void Delete(int questionId)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {

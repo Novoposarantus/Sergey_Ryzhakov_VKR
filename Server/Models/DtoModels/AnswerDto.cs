@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Models.Models
+namespace Models.DtoModels
 {
-    public class SimpleAnswerModel
+    public class AnswerDto
     {
-        public SimpleAnswerModel(AnswerModel model)
+        public AnswerDto(AnswerModel model)
         {
             Id = model.Id;
             Text = model.Text;

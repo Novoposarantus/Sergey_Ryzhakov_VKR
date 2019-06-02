@@ -32,26 +32,26 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return Ok(_questionRepository.GetQuestion(id));
+            return Ok(_questionRepository.Get(id));
         }
 
         [HttpPost]
         public IActionResult Post(QuestionModel question)
         {
-            _questionRepository.SaveQuestion(question);
+            _questionRepository.Save(question);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult Put(QuestionModel question)
         {
-            _questionRepository.UpdateQuestion(question);
+            _questionRepository.Update(question);
             return Ok();
         }
         [HttpDelete("{id}")]
         public IActionResult Put(int id)
         {
-            _questionRepository.DeleteQuestion(id);
+            _questionRepository.Delete(id);
             return Ok();
         }
     }

@@ -12,7 +12,7 @@ namespace Domain.Repositories
     {
         public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
 
-        public List<SimpleTestModel> Tests
+        public List<TestDto> Tests
         {
             get
             {
@@ -25,7 +25,7 @@ namespace Domain.Repositories
                         .Include(test => test.QuestionToTests)
                         .ThenInclude(questionToTest => questionToTest.Question)
                         .ThenInclude(question => question.QuestionType)
-                        .Select(test => new SimpleTestModel(test))
+                        .Select(test => new TestDto(test))
                         .ToList();
                 }
             }
@@ -36,7 +36,7 @@ namespace Domain.Repositories
             get => Tests.Select(test => new TestListItemDto(test)).ToList();
         }
 
-        public SimpleTestModel GetTest(int id)
+        public TestDto Get(int id)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -48,7 +48,77 @@ namespace Domain.Repositories
                         .ThenInclude(questionToTest => questionToTest.Question)
                         .ThenInclude(question => question.QuestionType)
                         .FirstOrDefault(t => t.Id == id);
-                return new SimpleTestModel(test);
+                return new TestDto(test);
+            }
+        }
+
+        public void Save(SaveTestDto testDto)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                TestModel test = new TestModel()
+                {
+                    Name = testDto.Name,
+                    Description = testDto.Description,
+                    QuestionToTests = testDto.Questions.Select(question => new QuestionToTestModel()
+                    {
+                        QuestionId = question.Id,
+                        QuestionDifficulty = question.Difficulty
+                    })
+                };
+                context.Tests.Add(test);
+                context.SaveChanges();
+            }
+        }
+
+        public void Update(SaveTestDto testDto)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var testQuestions = context.QuestionToTests.Where(qt => qt.TestId == testDto.Id);
+                foreach (var testQuestion in testQuestions)
+                {
+                    if (!testDto.Questions.Any(question => question.Id == testQuestion.Id))
+                    {
+                        context.QuestionToTests.Remove(testQuestion);
+                    }
+                }
+                context.SaveChanges();
+            }
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {   
+                TestModel test = new TestModel()
+                {
+                    Id = testDto.Id,
+                    Name = testDto.Name,
+                    Description = testDto.Description,
+                    QuestionToTests = testDto.Questions.Select(question => new QuestionToTestModel()
+                    {
+                        QuestionId = question.Id,
+                        QuestionDifficulty = question.Difficulty
+                    })
+                };
+                context.Tests.Add(test);
+                context.SaveChanges();
+            }
+        }
+
+        public void Delete(int id)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var test = context.Tests.FirstOrDefault(t => t.Id == id);
+                if(test == null)
+                {
+                    return;
+                }
+                var questionsToTests = context.QuestionToTests.Where(qt => qt.TestId == id);
+                if (questionsToTests.Any())
+                {
+                    context.QuestionToTests.RemoveRange(questionsToTests);
+                }
+                context.Tests.Remove(test);
+                context.SaveChanges();
             }
         }
     }

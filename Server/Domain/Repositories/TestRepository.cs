@@ -36,7 +36,7 @@ namespace Domain.Repositories
             get => Tests.Select(test => new TestListItemDto(test)).ToList();
         }
 
-        public TestDto Get(int id)
+        public TestEditDto Get(int id)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
@@ -48,7 +48,11 @@ namespace Domain.Repositories
                         .ThenInclude(questionToTest => questionToTest.Question)
                         .ThenInclude(question => question.QuestionType)
                         .FirstOrDefault(t => t.Id == id);
-                return new TestDto(test);
+                var allQuestions = context.Questions
+                    .Include(question => question.QuestionType)
+                    .Include(question => question.Answers)
+                    .ToList();
+                return new TestEditDto(test, allQuestions);
             }
         }
 

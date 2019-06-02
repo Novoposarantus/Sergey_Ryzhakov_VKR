@@ -5,6 +5,7 @@ import {testList} from './testList';
 import {toolbar} from './toolbar';
 import {questionsList} from './questionsList';
 import {questionEdit} from './questionEdit';
+import {testEdit} from './testEdit';
 
 import {
     defaultVuex
@@ -17,7 +18,8 @@ const modules = {
     testList,
     toolbar,
     questionsList,
-    questionEdit
+    questionEdit,
+    testEdit
 }
 
 export function createStore() {

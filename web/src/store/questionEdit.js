@@ -49,111 +49,111 @@ export const questionEdit = {
         ...defaultVuex.actions,
         "GET" : async ({commit}, questionId)=>{
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 let questions = await request(url.questions + `/${questionId}`, 'GET');
                 commit("SET_QUESTION", questions.json);
                 let questionsTypes = await request(url.questionsTypes, 'GET');
                 commit("SET_QUESTION_TYPES", questionsTypes.json);
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
         "GET_EMPTY" : async ({commit}) => {
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 let {json} = await request(url.questionsTypes, 'GET');
                 commit("SET_QUESTION_TYPES", json);
                 commit("SET_QUESTION", {...emptyQuestion});
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
         "SAVE" : async ({commit}, question) => {
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 await request(url.questions, 'POST', question);
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
         "UPDATE" : async ({commit}, question) => {
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 await request(url.questions, 'PUT', question);
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
         "DELETE" : async ({commit}, questionId) => {
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 await request(url.questions + `/${questionId}`, 'DELETE');
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
         "SAVE_TYPE" : async ({commit}, typeName) => {
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 let {json} = await request(url.questionsTypes, 'POST', {name: typeName});
                 commit("ADD_QUESTION_TYPE", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
 
     }

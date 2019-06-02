@@ -6,6 +6,7 @@ import RegistrationView from '@/views/auth/RegistrationView.vue';
 import TestsList from '@/views/TestsListView.vue';
 import QuestionsListView from '@/views/QuestionsListView.vue';
 import EditQuestionView from '@/views/EditQuestionView.vue';
+import EditTestView from '@/views/EditTestView.vue';
 
 import {
     routeNames,
@@ -105,6 +106,28 @@ export function createRouter (store) {
                     if(isNotAuthenticated(next)) return;
                     if(!(await isInRole(next, roles.admin))) return;
                     await store.dispatch("testList/GET");
+                    next();
+                }  
+            },
+            {
+                path: '/edit-test',
+                name: routeNames.TestsEdit,
+                component :  EditTestView,
+                beforeEnter: async (_to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.admin))) return;
+                    await store.dispatch("questionEdit/GET_EMPTY");
+                    next();
+                }  
+            },
+            {
+                path: '/edit-test/:id',
+                name: routeNames.TestsEditId,
+                component :  EditTestView,
+                beforeEnter: async (to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.admin))) return;
+                    await store.dispatch("questionEdit/GET", to.params.id);
                     next();
                 }  
             },

@@ -147,8 +147,12 @@ export default {
         }
     },
     beforeMount(){
+        var question = this.$store.getters["questionEdit/QUESTION"];
         this.question = {
-            ...this.$store.getters["questionEdit/QUESTION"]
+            ...question,
+            answers:[
+                ...question.answers.map(a=> ({...a}))
+            ]
         }
     }
 }

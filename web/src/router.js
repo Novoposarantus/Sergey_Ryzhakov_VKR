@@ -72,13 +72,11 @@ export function createRouter (store) {
             {
                 path: '/',
                 name : routeNames.Start,
-                redirect: () => {
-                    return {
-                        name: store.getters["auth/IS_AUTHENTICATED"]
+                redirect: () => ({
+                    name: store.getters["auth/IS_AUTHENTICATED"]
                         ? routeNames.TestsList
                         : routeNames.Login
-                    }
-                }
+                })
             },
             {
                 path: '/login',
@@ -116,7 +114,7 @@ export function createRouter (store) {
                 beforeEnter: async (_to, _from, next) => {
                     if(isNotAuthenticated(next)) return;
                     if(!(await isInRole(next, roles.admin))) return;
-                    await store.dispatch("questionEdit/GET_EMPTY");
+                    await store.dispatch("testEdit/GET_EMPTY");
                     next();
                 }  
             },
@@ -127,7 +125,7 @@ export function createRouter (store) {
                 beforeEnter: async (to, _from, next) => {
                     if(isNotAuthenticated(next)) return;
                     if(!(await isInRole(next, roles.admin))) return;
-                    await store.dispatch("questionEdit/GET", to.params.id);
+                    await store.dispatch("testEdit/GET", to.params.id);
                     next();
                 }  
             },

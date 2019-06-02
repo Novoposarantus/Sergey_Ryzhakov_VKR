@@ -33,6 +33,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import {routeNames} from '@/support';
 export default {
     data () {
         return {
@@ -63,10 +64,10 @@ export default {
     },
     methods:{
         editTest(test){
-            console.log(test);
+            this.$router.push({name: routeNames.TestsEditId, params: { id : test.id }})
         },
         createNewTest(){
-
+            this.$router.push({name: routeNames.TestsEdit});
         }
     }
 }

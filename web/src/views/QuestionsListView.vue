@@ -63,7 +63,7 @@ export default {
     },
     methods:{
         editQuestion(question){
-            this.$router.push({name: routeNames.QuestionEditId, params: { id : question.id }})
+            this.$router.push({name: routeNames.QuestionEditId, params: { id : question.id }});
         },
         createNewQuestion(){
             this.$router.push({name: routeNames.QuestionEdit})

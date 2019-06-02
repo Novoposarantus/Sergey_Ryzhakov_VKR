@@ -5,7 +5,7 @@ import {
     emptyTest
 } from '../support';
 
-export const questionEdit = {
+export const testEdit = {
     namespaced: true,
     state:{
         ...defaultVuex.state,
@@ -67,7 +67,7 @@ export const questionEdit = {
             commit(defaultVuex.mutationsNames.startLoading);
             //try {
                 let {json} = await request(url.testsAllQuestions, 'GET');
-                commit("SET_TEST", emptyTest);
+                commit("SET_TEST", {...emptyTest});
                 commit("SET_QUESTIONS", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
             // }

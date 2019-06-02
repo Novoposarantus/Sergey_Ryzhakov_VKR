@@ -12,7 +12,7 @@ namespace Models.DtoModels
             Id = model.Id;
             Name = model.Name;
             Description = model.Description;
-            Questions = model.QuestionToTests.Select(qt => new QuestionWithDifficultyDto(qt.Question, qt.QuestionDifficulty)).ToList();
+            Questions = model.QuestionToTests.Select(qt => new QuestionWithDifficultyDto(qt.Question, qt.Difficulty)).ToList();
         }
         public int Id { get; set; }
         public string Name { get; set; }

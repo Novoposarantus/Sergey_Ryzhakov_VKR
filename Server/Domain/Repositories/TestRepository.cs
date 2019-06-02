@@ -58,19 +58,27 @@ namespace Domain.Repositories
 
         public void Save(SaveTestDto testDto)
         {
+            int testId = 0;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 TestModel test = new TestModel()
                 {
                     Name = testDto.Name,
-                    Description = testDto.Description,
-                    QuestionToTests = testDto.Questions.Select(question => new QuestionToTestModel()
-                    {
-                        QuestionId = question.Id,
-                        QuestionDifficulty = question.Difficulty
-                    })
+                    Description = testDto.Description
                 };
-                context.Tests.Add(test);
+                var testEntity = context.Tests.Add(test);
+                context.SaveChanges();
+                testId = testEntity.Entity.Id;
+            }
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var questionToTests = testDto.Questions.Select(question => new QuestionToTestModel()
+                {
+                    QuestionId = question.Id,
+                    Difficulty = question.Difficulty,
+                    TestId = testId
+                });
+                context.QuestionToTests.AddRange(questionToTests);
                 context.SaveChanges();
             }
         }
@@ -99,7 +107,7 @@ namespace Domain.Repositories
                     QuestionToTests = testDto.Questions.Select(question => new QuestionToTestModel()
                     {
                         QuestionId = question.Id,
-                        QuestionDifficulty = question.Difficulty
+                        Difficulty = question.Difficulty
                     })
                 };
                 context.Tests.Add(test);

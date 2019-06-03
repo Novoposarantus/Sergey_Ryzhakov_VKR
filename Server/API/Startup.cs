@@ -35,6 +35,9 @@ namespace API
             services.AddScoped<IQuestionRepository>(provider =>
                 new QuestionRepository(Configuration.GetConnectionString("DefaultConnection"),
                 provider.GetService<IRepositoryContextFactory>()));
+            services.AddScoped<IAssignmentsRepository>(provider =>
+                new AssignmentsRepository(Configuration.GetConnectionString("DefaultConnection"),
+                provider.GetService<IRepositoryContextFactory>()));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

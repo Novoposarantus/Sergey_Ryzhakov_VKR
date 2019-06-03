@@ -13,9 +13,9 @@ namespace Domain.Context
         public DbSet<QuestionModel> Questions { get; set; }
         public DbSet<AnswerModel> Answers { get; set; }
         public DbSet<QuestionTypeModel> QuestionTypes { get; set; }
-        public DbSet<UserAnswerModel> UserAnswers { get; set; }
         public DbSet<TestModel> Tests { get; set; }
         public DbSet<QuestionToTestModel> QuestionToTests { get; set; }
+        public DbSet<AssignmentModel> Assignments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

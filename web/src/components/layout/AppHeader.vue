@@ -63,7 +63,7 @@ export default {
     }),
     onLogout(){
       this.logout();
-      this.$router.push({name: routeNames.StartGallery});
+      this.$router.push({name: routeNames.Login});
     }
   }
 }

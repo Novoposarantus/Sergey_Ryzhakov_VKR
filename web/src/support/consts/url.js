@@ -4,5 +4,6 @@ export const url = {
     questions : 'http://localhost:55229/api/Questions',
     questionsTypes : 'http://localhost:55229/api/QuestionType',
     tests : 'http://localhost:55229/api/CreatingTest',
+    assignmnents : 'http://localhost:55229/api/Assignments',
     testsAllQuestions : 'http://localhost:55229/api/CreatingTest/AllQuestions'
 }

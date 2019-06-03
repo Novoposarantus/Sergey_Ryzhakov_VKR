@@ -1,7 +1,5 @@
 ﻿using Models.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Models.DtoModels
 {
@@ -16,11 +14,13 @@ namespace Models.DtoModels
                 ? TimeSpan.FromSeconds(model.Duration.Value).ToString(@"hh\:mm\:ss\")
                 : null;
             Result = model.Result;
+            DateCreate = model.DateCreate.ToString("dd.MM.yyyy HH:mm");
         }
         public int Id { get; set; }
         public string UserName { get; set; }
         public string TestName { get; set; }
         public string Time { get; set; }
         public double? Result { get; set; }
+        public string DateCreate { get; set; }
     }
 }

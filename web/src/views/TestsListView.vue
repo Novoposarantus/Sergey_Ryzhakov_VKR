@@ -16,8 +16,8 @@
         >
             <template v-slot:items="props">
                 <td @click="editTest(props.item)">{{ props.item.name }}</td>
-                <td class="text-xs-right">{{ props.item.description }}</td>
-                <td class="text-xs-right">{{ props.item.questionsCount }}</td>
+                <td class="text-xs">{{ props.item.description }}</td>
+                <td class="text-xs">{{ props.item.questionsCount }}</td>
             </template>
             <template v-slot:no-data>
                 <v-alert :value="true" color="error" icon="warning">

@@ -8,6 +8,6 @@ namespace Domain.Interfaces
     public interface IAssignmentsRepository
     {
         List<AssignmentsDto> Assignments { get; }
-        AssignmentsDto Save(SaveAssignmnentsDto dto);
+        AssignmentsDto Save(SaveAssignmentsDto dto);
     }
 }

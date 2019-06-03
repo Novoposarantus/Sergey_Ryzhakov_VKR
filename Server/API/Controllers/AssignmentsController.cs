@@ -15,10 +15,15 @@ namespace API.Controllers
     {
         readonly ITestRepository _testRepository;
         readonly IAssignmentsRepository _assignmentsRepository;
-        public AssignmentsController(ITestRepository testRepository, IAssignmentsRepository assignmentsRepository)
+        readonly IUserRepository _userRepository;
+        public AssignmentsController(
+            ITestRepository testRepository, 
+            IAssignmentsRepository assignmentsRepository,
+            IUserRepository userRepository)
         {
             _testRepository = testRepository;
             _assignmentsRepository = assignmentsRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
@@ -26,11 +31,12 @@ namespace API.Controllers
         {
             return Ok(new AssignmentsPageDto(
                 _testRepository.Tests,
-                _assignmentsRepository.Assignments));
+                _assignmentsRepository.Assignments,
+                _userRepository.Users));
         }
 
         [HttpPost]
-        public IActionResult Post(SaveAssignmnentsDto dto)
+        public IActionResult Post(SaveAssignmentsDto dto)
         {
             return Ok(_assignmentsRepository.Save(dto));
         }

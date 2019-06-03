@@ -13,5 +13,6 @@ namespace Models.Models
         public TestModel Test { get; set; }
         public int? Duration { get; set; }
         public double? Result { get; set; }
+        public DateTime DateCreate { get; set; }
     }
 }

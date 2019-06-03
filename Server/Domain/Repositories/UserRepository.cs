@@ -5,22 +5,58 @@ using Models.Models;
 using Models.Exceptions;
 using System.Linq;
 using System.Collections.Generic;
+using Models.DtoModels;
+using Models.Enums;
 
 namespace Domain.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
-        public List<UserModel> Users
+        public List<UserDto> All
         {
             get
             {
                 using (var context = ContextFactory.CreateDbContext(ConnectionString))
                 {
-                    return context.Users.Include(user => user.Role).ToList();
+                    return context.Users
+                        .Include(user => user.Role)
+                        .Select(user=>new UserDto(user))
+                        .ToList();
                 }
             }
         }
+
+        public List<UserDto> Users
+        {
+            get
+            {
+                using (var context = ContextFactory.CreateDbContext(ConnectionString))
+                {
+                    return context.Users
+                        .Where(user=>user.RoleId == (int)RoleEnum.User)
+                        .Include(user => user.Role)
+                        .Select(user => new UserDto(user))
+                        .ToList();
+                }
+            }
+        }
+
+        public List<UserDto> Admins
+        {
+            get
+            {
+                using (var context = ContextFactory.CreateDbContext(ConnectionString))
+                {
+                    return context.Users
+                        .Where(user => user.RoleId == (int)RoleEnum.Admin)
+                        .Include(user => user.Role)
+                        .Select(user => new UserDto(user))
+                        .ToList();
+                }
+            }
+        }
+
 
         public UserModel GetUser(int userId)
         {

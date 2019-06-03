@@ -7,6 +7,7 @@ import TestsList from '@/views/TestsListView.vue';
 import QuestionsListView from '@/views/QuestionsListView.vue';
 import EditQuestionView from '@/views/EditQuestionView.vue';
 import EditTestView from '@/views/EditTestView.vue';
+import AssignmentsView from '@/views/AssignmentsView.vue';
 
 import {
     routeNames,
@@ -72,11 +73,18 @@ export function createRouter (store) {
             {
                 path: '/',
                 name : routeNames.Start,
-                redirect: () => ({
-                    name: store.getters["auth/IS_AUTHENTICATED"]
-                        ? routeNames.TestsList
-                        : routeNames.Login
-                })
+                redirect: async () => {
+                    if(!store.getters["auth/IS_AUTHENTICATED"]){
+                        return {name: routeNames.Login};
+                    }
+                    await awaitAuthInfo();
+                    let roleId = store.getters["auth/ROLE_ID"];
+                    return {
+                        name: roleId == roles.admin
+                            ? routeNames.TestsList
+                            : routeNames.Login
+                    }
+                }
             },
             {
                 path: '/login',
@@ -159,6 +167,17 @@ export function createRouter (store) {
                     if(isNotAuthenticated(next)) return;
                     if(!(await isInRole(next, roles.admin))) return;
                     await store.dispatch("questionEdit/GET", to.params.id);
+                    next();
+                }  
+            },
+            {
+                path: '/assignments',
+                name: routeNames.Assignments,
+                component :  AssignmentsView,
+                beforeEnter: async (_to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.admin))) return;
+                    await store.dispatch("assignments/GET");
                     next();
                 }  
             },

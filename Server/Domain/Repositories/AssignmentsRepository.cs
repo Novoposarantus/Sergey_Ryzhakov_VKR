@@ -4,6 +4,7 @@ using Models.Models;
 using System.Linq;
 using System.Collections.Generic;
 using Models.DtoModels;
+using System;
 
 namespace Domain.Repositories
 {
@@ -26,14 +27,15 @@ namespace Domain.Repositories
             }
         }
 
-        public AssignmentsDto Save(SaveAssignmnentsDto dto)
+        public AssignmentsDto Save(SaveAssignmentsDto dto)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 var assignment = new AssignmentModel()
                 {
                     UserModelId = dto.UserId,
-                    TestModelId = dto.TestId
+                    TestModelId = dto.TestId,
+                    DateCreate = DateTime.Now
                 };
                 var assignmentEntity = context.Assignments.Add(assignment);
                 context.SaveChanges();

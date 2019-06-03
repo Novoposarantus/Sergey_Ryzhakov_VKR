@@ -12,6 +12,7 @@
     "bootstrap-vue": "^2.0.0-rc.16",
     "core-js": "^2.6.5",
     "js-cookie": "^2.2.0",
+    "moment": "^2.24.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.2",
     "vuetify": "^1.5.5",

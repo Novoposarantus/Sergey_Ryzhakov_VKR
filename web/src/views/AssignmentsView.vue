@@ -4,59 +4,20 @@
             <v-toolbar flat color="transparent">
                 <v-toolbar-title>Назначения</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn  @click="addQuestion()"
+                <v-btn  @click="addAssignments()"
                         v-if="showAdd"
                         color="primary" 
                         dark>
-                    Добавить вопрос
-                </v-btn>
-                <v-btn  v-if="showSave"
-                        @click="save()"
-                        color="success" 
-                        dark>
-                    Сохранить
-                </v-btn>
-                <v-btn  v-if="!isNew"
-                        @click="remove()"
-                        color="error" 
-                        dark>
-                    Удалить
+                    Добавить назначение
                 </v-btn>
             </v-toolbar>
-            <v-text-field
-                v-model="test.name"
-                :rules="[v => !!v || 'Поле не моет быть пустым']"
-                label="Название"
-                required
-            ></v-text-field>
-            <v-textarea
-                v-model="test.description"
-                label="Описание"
-            ></v-textarea>
-            <template v-for="(question, index) in questions">
-                <question
-                    v-if="question != null"
-                    :key="index"
-                    :question="question"
-                    @remove="questionRemove(index)"
-                    @questionChange="questionChange($event, index)">
-                </question>
-                <select-question 
-                    v-else
-                    :key="index"
-                    :filteredQuestions="filteredQuestions"
-                    @remove="questionRemove(index)"
-                    @save="saveQuestion($event, index)">
-                </select-question>
-            </template>
-            
+            <assignments-table></assignments-table>
         </v-container>
     </v-form>
 </template>
 
 <script>
-import Question from "@/components/common/EditTest/EditTestQuestion.vue";
-import SelectQuestion from "@/components/common/EditTest/EditTestSelectQuestion.vue";
+import AssignmentsTable from "@/components/common/Assignments/AssignmentsTable.vue";
 import {mapGetters, mapActions} from 'vuex';
 import {routeNames} from '@/support';
 
@@ -128,30 +89,6 @@ export default {
                 difficulty : 1
             });
         },
-        questionRemove(index){
-            this.questions.splice(index, 1);
-        },
-        questionChange({id, difficulty}, index){
-            var question = this.allQuestions.find(question=> question.id == id);
-            this.questions.splice(index, 1, 
-            {
-                ...question,
-                difficulty: difficulty
-            });
-        },
-        async remove(){
-            if(this.isNew) return;
-            await this.deleteTest(this.test.id);
-            this.$router.push({name: routeNames.TestsList});
-        }
-    },
-    beforeMount(){
-        this.test = {
-            ...this.$store.getters["testEdit/TEST"]
-        };
-        this.questions = [
-            ...this.test.questions
-        ]
     }
 }
 </script>

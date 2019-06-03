@@ -87,30 +87,43 @@ namespace Domain.Repositories
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                var testQuestions = context.QuestionToTests.Where(qt => qt.TestId == testDto.Id);
-                foreach (var testQuestion in testQuestions)
-                {
-                    if (!testDto.Questions.Any(question => question.Id == testQuestion.Id))
-                    {
-                        context.QuestionToTests.Remove(testQuestion);
-                    }
-                }
-                context.SaveChanges();
-            }
-            using (var context = ContextFactory.CreateDbContext(ConnectionString))
-            {   
                 TestModel test = new TestModel()
                 {
                     Id = testDto.Id,
                     Name = testDto.Name,
-                    Description = testDto.Description,
-                    QuestionToTests = testDto.Questions.Select(question => new QuestionToTestModel()
-                    {
-                        QuestionId = question.Id,
-                        Difficulty = question.Difficulty
-                    })
+                    Description = testDto.Description
                 };
-                context.Tests.Add(test);
+                var testEntity = context.Tests.Update(test);
+                context.SaveChanges();
+            }
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var testQuestions = context.QuestionToTests.Where(qt => qt.TestId == testDto.Id);
+                foreach (var testQuestion in testQuestions)
+                {
+                    var questionDto = testDto.Questions.FirstOrDefault(question => question.Id == testQuestion.Id);
+                    if (questionDto == null)
+                    {
+                        context.QuestionToTests.Remove(testQuestion);
+                    }
+                    else
+                    {
+                        testQuestion.Difficulty = questionDto.Difficulty;
+                        context.Update(testQuestion);
+                    }
+                }
+                foreach (var questionDto in testDto.Questions)
+                {
+                    if(!testQuestions.Any(qt => qt.QuestionId == questionDto.Id))
+                    {
+                        context.QuestionToTests.Add(new QuestionToTestModel()
+                        {
+                            QuestionId = questionDto.Id,
+                            Difficulty = questionDto.Difficulty,
+                            TestId = testDto.Id
+                        });
+                    }
+                }
                 context.SaveChanges();
             }
         }

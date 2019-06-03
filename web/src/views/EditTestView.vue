@@ -122,7 +122,7 @@ export default {
             }else{
                 await this.updateTest(test);
             }
-            this.$router.push({name: routeNames.QuestionsList});
+            this.$router.push({name: routeNames.TestsList});
         },
         addQuestion(){
             this.questions.push(null);
@@ -148,7 +148,7 @@ export default {
         async remove(){
             if(this.isNew) return;
             await this.deleteTest(this.test.id);
-            this.$router.push({name: routeNames.QuestionsList});
+            this.$router.push({name: routeNames.TestsList});
         }
     },
     beforeMount(){

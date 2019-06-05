@@ -13,7 +13,7 @@
       <v-data-table
         hide-actions
         :headers="headers"
-        :items="sortedAssignments"
+        :items="assignments"
         :search="search"
       >
         <template v-slot:items="props">
@@ -23,10 +23,10 @@
           <td class="text-xs">{{ props.item.result }}</td>
           <td class="text-xs">{{ props.item.dateCreate }}</td>
         </template>
-        <template v-slot:no-results>
-          <v-alert :value="true" color="error" icon="warning">
-            Информация не найдена.
-          </v-alert>
+        <template v-slot:no-data>
+            <v-alert :value="true" color="error" icon="warning">
+                Назначения не найдены.
+            </v-alert>
         </template>
       </v-data-table>
     </v-card>
@@ -34,7 +34,6 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import moment from 'moment';
 export default {
     data(){
         return{
@@ -51,21 +50,7 @@ export default {
     computed: {
         ...mapGetters({
             assignments: "assignments/ASSIGNMENTS"
-        }),
-        sortedAssignments(){
-            var format = "DD.MM.YYYYY HH:mm"
-            return assignments.sort((first, second)=>{
-                var dateFirst = moment(first.createDate,format);
-                var dateSecond = moment(second.createDate,format);
-                if(dateFirst.isAfter(dateSecond)){
-                    return -1;
-                }
-                if(dateSecond.isAfter(dateFirst)){
-                    return 1;
-                }
-                return 0;
-            })
-        }
+        })
     }
 }
 </script>

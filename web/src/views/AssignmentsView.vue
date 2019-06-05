@@ -11,6 +11,10 @@
                     Добавить назначение
                 </v-btn>
             </v-toolbar>
+            <assignments-select
+                v-if="showSelect"
+                @close="closeSelect()">
+            </assignments-select>
             <assignments-table></assignments-table>
         </v-container>
     </v-form>
@@ -18,77 +22,30 @@
 
 <script>
 import AssignmentsTable from "@/components/common/Assignments/AssignmentsTable.vue";
-import {mapGetters, mapActions} from 'vuex';
-import {routeNames} from '@/support';
+import AssignmentsSelect from "@/components/common/Assignments/AssignmentsSelect.vue";
 
 export default {
     components:{
-        Question,
-        SelectQuestion
+        AssignmentsTable,
+        AssignmentsSelect
     },
     data(){
         return {
-            test:{},
-            questions: []
+            showSelect: false
         }
     },
     computed:{
-        ...mapGetters({
-            allQuestions : 'testEdit/QUESTIONS'
-        }),
-        isNew(){
-            return !this.$route.params.id;
-        },
-        showSave(){
-            return this.questions.filter(q=>!!q).length > 0;
-        },
-        showDeleteAnswer(){
-            return !this.isNew;
-        },
-
-        filteredQuestions(){
-            return this.allQuestions
-            .filter(allQ => !this.questions
-                .find(q=> !q || q.id == allQ.id))
-        },
         showAdd(){
-            return this.filteredQuestions.length > 0;
+            return !this.showSelect;
         }
     },
     methods:{
-        ...mapActions({
-            saveTest : "testEdit/SAVE",
-            updateTest : "testEdit/UPDATE",
-            deleteTest : "testEdit/DELETE"
-        }),
-        async save(){
-            if (!this.$refs.form.validate() || !this.showSave) {
-                return;
-            }
-            let test = {
-                    ...this.test,
-                    questions : this.questions.filter(q=>!!q).map(q=>({
-                        id: q.id,
-                        difficulty: q.difficulty
-                    }))
-            }
-            if(this.isNew){
-                await this.saveTest(test);
-            }else{
-                await this.updateTest(test);
-            }
-            this.$router.push({name: routeNames.TestsList});
+        addAssignments(){
+            this.showSelect = true;
         },
-        addQuestion(){
-            this.questions.push(null);
-        },
-        saveQuestion(questionId, index){
-            var question = this.allQuestions.find(q=> q.id == questionId);
-            this.questions.splice(index, 1, {
-                ...question,
-                difficulty : 1
-            });
-        },
+        closeSelect(){
+            this.showSelect = false;
+        }
     }
 }
 </script>

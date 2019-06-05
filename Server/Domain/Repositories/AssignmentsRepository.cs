@@ -21,9 +21,22 @@ namespace Domain.Repositories
                     return context.Assignments
                         .Include(assignment => assignment.User)
                         .Include(assignment => assignment.Test)
+                        .OrderByDescending(x => x.DateCreate)
                         .Select(assignment => new AssignmentsDto(assignment))
                         .ToList();
                 }
+            }
+        }
+
+        public AssignmentsDto Get(int id)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var assignment = context.Assignments
+                    .Include(a => a.User)
+                    .Include(a => a.Test)
+                    .FirstOrDefault(a => a.Id == id);
+                return new AssignmentsDto(assignment);
             }
         }
 
@@ -39,7 +52,11 @@ namespace Domain.Repositories
                 };
                 var assignmentEntity = context.Assignments.Add(assignment);
                 context.SaveChanges();
-                return new AssignmentsDto(assignmentEntity.Entity);
+                assignment = context.Assignments
+                    .Include(a => a.User)
+                    .Include(a => a.Test)
+                    .FirstOrDefault(a => a.Id == assignmentEntity.Entity.Id);
+                return new AssignmentsDto(assignment);
             }
         }
     }

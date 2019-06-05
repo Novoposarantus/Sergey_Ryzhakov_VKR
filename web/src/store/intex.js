@@ -6,6 +6,7 @@ import {toolbar} from './toolbar';
 import {questionsList} from './questionsList';
 import {questionEdit} from './questionEdit';
 import {testEdit} from './testEdit';
+import {assignments} from './assignments'
 
 import {
     defaultVuex
@@ -19,7 +20,8 @@ const modules = {
     toolbar,
     questionsList,
     questionEdit,
-    testEdit
+    testEdit,
+    assignments
 }
 
 export function createStore() {

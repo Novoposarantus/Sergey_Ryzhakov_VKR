@@ -35,7 +35,11 @@
 import { mapGetters } from 'vuex';
 export default {
     props:{
-        question: Object
+        question: Object,
+        showActions:{
+            type: Boolean,
+            default: true
+        }
     },
     data(){
         return{

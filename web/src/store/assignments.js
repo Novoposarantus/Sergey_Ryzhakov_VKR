@@ -32,7 +32,7 @@ export const assignments = {
             ];
         },
         "ADD_ASSIGNMNENT": (state, assignment) => {
-            state.assignments.push(assignment);
+            state.assignments.unshift(assignment);
         },
         "CLEAR": (state) => {
             defaultVuex.clear(state);
@@ -47,7 +47,7 @@ export const assignments = {
             commit(defaultVuex.mutationsNames.startLoading);
             //try {
                 let {json} = await request(url.assignmnents, 'GET');
-                commit("SET_TEST_INFO", json);
+                commit("SET", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
             // }
             // catch (error) {

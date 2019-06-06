@@ -45,39 +45,39 @@ export const assignments = {
         ...defaultVuex.actions,
         "GET" : async ({commit})=>{
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 let {json} = await request(url.assignmnents, 'GET');
                 commit("SET", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         },
         "SAVE" : async ({commit}, assignment) => {
             commit(defaultVuex.mutationsNames.startLoading);
-            //try {
+            try {
                 let {json} = await request(url.assignmnents, 'POST', assignment);
                 commit("ADD_ASSIGNMNENT", json);
                 commit(defaultVuex.mutationsNames.finishLoading);
-            // }
-            // catch (error) {
-            //     if(!error.response || error.response.status !== 400){
-            //         commit(defaultVuex.mutationsNames.setError);
-            //     }
-            //     else
-            //     {
-            //         commit(defaultVuex.mutationsNames.setError, error.response.data);
-            //     }
-            //     commit(defaultVuex.mutationsNames.finishLoading);
-            // }
+            }
+            catch (error) {
+                if(!error.response || error.response.status !== 400){
+                    commit(defaultVuex.mutationsNames.setError);
+                }
+                else
+                {
+                    commit(defaultVuex.mutationsNames.setError, error.response.data);
+                }
+                commit(defaultVuex.mutationsNames.finishLoading);
+            }
         }
     }
 };

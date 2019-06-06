@@ -10,6 +10,7 @@ namespace Models.DtoModels
             Id = model.Id;
             UserName = model.User.UserName;
             TestName = model.Test.Name;
+            TestId = model.TestModelId;
             Time = model.Duration.HasValue
                 ? TimeSpan.FromSeconds(model.Duration.Value).ToString(@"hh\:mm\:ss\")
                 : null;
@@ -18,6 +19,7 @@ namespace Models.DtoModels
         }
         public int Id { get; set; }
         public string UserName { get; set; }
+        public int TestId { get; set; }
         public string TestName { get; set; }
         public string Time { get; set; }
         public double? Result { get; set; }

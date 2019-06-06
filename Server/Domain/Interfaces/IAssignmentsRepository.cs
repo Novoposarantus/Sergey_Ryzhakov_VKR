@@ -9,5 +9,6 @@ namespace Domain.Interfaces
     {
         List<AssignmentsDto> Assignments { get; }
         AssignmentsDto Save(SaveAssignmentsDto dto);
+        List<AssignmentsDto> Get(int userid);
     }
 }

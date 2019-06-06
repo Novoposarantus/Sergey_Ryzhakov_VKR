@@ -78,7 +78,7 @@ export default {
             }
             await this.authentication({...this.form});
             if(!this.error){
-                this.$router.push({name: routeNames.TestsList});
+                this.$router.push({name: routeNames.Start});
             }
         },
     }

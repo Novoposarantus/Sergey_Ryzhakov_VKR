@@ -8,6 +8,7 @@ import QuestionsListView from '@/views/QuestionsListView.vue';
 import EditQuestionView from '@/views/EditQuestionView.vue';
 import EditTestView from '@/views/EditTestView.vue';
 import AssignmentsView from '@/views/AssignmentsView.vue';
+import UserAssignmentsView from '@/views/UserAssignmentsView.vue';
 
 import {
     routeNames,
@@ -20,7 +21,7 @@ Vue.use(VueRouter);
 export function createRouter (store) {
     function isNotAuthenticated(next){
         if (!store.getters["auth/IS_AUTHENTICATED"]) {
-            next({name: routeNames.Login});
+            next({name: routeNames.Start});
             return true;
         }
     
@@ -29,7 +30,7 @@ export function createRouter (store) {
  
     function isAuthenticated(next){
         if (store.getters["auth/IS_AUTHENTICATED"]) {
-            next({name: routeNames.TestsList});
+            next({name: routeNames.Start});
             return true;
         }
         return false;
@@ -73,17 +74,16 @@ export function createRouter (store) {
             {
                 path: '/',
                 name : routeNames.Start,
-                redirect: async () => {
+                redirect: () => {
                     if(!store.getters["auth/IS_AUTHENTICATED"]){
                         return {name: routeNames.Login};
                     }
-                    await awaitAuthInfo();
+                    awaitAuthInfo();
                     let roleId = store.getters["auth/ROLE_ID"];
-                    return {
-                        name: roleId == roles.admin
-                            ? routeNames.TestsList
-                            : routeNames.Login
-                    }
+                    let name = roleId == roles.admin
+                        ? routeNames.TestsList
+                        : routeNames.TestingList;
+                    return {name: name}
                 }
             },
             {
@@ -181,6 +181,17 @@ export function createRouter (store) {
                     next();
                 }  
             },
+            {
+                path: '/testing-list',
+                name: routeNames.TestingList,
+                component : UserAssignmentsView,
+                beforeEnter: async (_to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.user))) return;
+                    await store.dispatch("userAssignments/GET");
+                    next();
+                }  
+            }
         ]
     });
 }

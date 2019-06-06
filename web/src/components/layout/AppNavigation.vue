@@ -30,6 +30,14 @@
             <v-list-tile-title>Назначения</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile @click="toTestingList()" v-if="isUser">
+          <v-list-tile-action>
+            <v-icon>fas fa-user-graduate</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Тесты</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 </template>
@@ -69,6 +77,9 @@ export default {
         },
         toAssignments(){
           this.$router.push({name: routeNames.Assignments});
+        },
+        toTestingList(){
+          this.$router.push({name: routeNames.TestsList});
         }
     },
 }

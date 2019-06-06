@@ -6,6 +6,9 @@ using Domain.Interfaces;
 using Models.DtoModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Models.Enums.Internal;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -27,6 +30,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Get()
         {
             return Ok(new AssignmentsPageDto(
@@ -35,7 +39,16 @@ namespace API.Controllers
                 _userRepository.Users));
         }
 
+        [HttpGet("GetByUser")]
+        [Authorize(Roles = RoleNames.User)]
+        public IActionResult GetByUser()
+        {
+            int userId = int.Parse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            return Ok(_assignmentsRepository.Get(userId));
+        }
+
         [HttpPost]
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Post(SaveAssignmentsDto dto)
         {
             return Ok(_assignmentsRepository.Save(dto));

@@ -21,22 +21,24 @@ namespace Domain.Repositories
                     return context.Assignments
                         .Include(assignment => assignment.User)
                         .Include(assignment => assignment.Test)
-                        .OrderByDescending(x => x.DateCreate)
+                        .OrderByDescending(assignment => assignment.DateCreate)
                         .Select(assignment => new AssignmentsDto(assignment))
                         .ToList();
                 }
             }
         }
 
-        public AssignmentsDto Get(int id)
+        public List<AssignmentsDto> Get(int userid)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                var assignment = context.Assignments
-                    .Include(a => a.User)
-                    .Include(a => a.Test)
-                    .FirstOrDefault(a => a.Id == id);
-                return new AssignmentsDto(assignment);
+                return context.Assignments
+                    .Include(assignment => assignment.User)
+                    .Include(assignment => assignment.Test)
+                    .Where(assignment => assignment.UserModelId == userid)
+                    .OrderByDescending(assignment => assignment.DateCreate)
+                    .Select(assignment => new AssignmentsDto(assignment))
+                    .ToList();
             }
         }
 

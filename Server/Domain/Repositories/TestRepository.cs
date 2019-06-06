@@ -117,10 +117,24 @@ namespace Domain.Repositories
             }
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                var testQuestions = context.QuestionToTests.Where(qt => qt.TestId == testDto.Id);
+                var testQuestions = context.QuestionToTests
+                    .Where(qt => qt.TestId == testDto.Id)
+                    .ToList();
+                foreach (var questionDto in testDto.Questions)
+                {
+                    if (!testQuestions.Any(qt => qt.QuestionId == questionDto.Id))
+                    {
+                        context.QuestionToTests.Add(new QuestionToTestModel()
+                        {
+                            QuestionId = questionDto.Id,
+                            Difficulty = questionDto.Difficulty,
+                            TestId = testDto.Id
+                        });
+                    }
+                }
                 foreach (var testQuestion in testQuestions)
                 {
-                    var questionDto = testDto.Questions.FirstOrDefault(question => question.Id == testQuestion.Id);
+                    var questionDto = testDto.Questions.FirstOrDefault(question => question.Id == testQuestion.QuestionId);
                     if (questionDto == null)
                     {
                         context.QuestionToTests.Remove(testQuestion);
@@ -129,18 +143,6 @@ namespace Domain.Repositories
                     {
                         testQuestion.Difficulty = questionDto.Difficulty;
                         context.Update(testQuestion);
-                    }
-                }
-                foreach (var questionDto in testDto.Questions)
-                {
-                    if(!testQuestions.Any(qt => qt.QuestionId == questionDto.Id))
-                    {
-                        context.QuestionToTests.Add(new QuestionToTestModel()
-                        {
-                            QuestionId = questionDto.Id,
-                            Difficulty = questionDto.Difficulty,
-                            TestId = testDto.Id
-                        });
                     }
                 }
                 context.SaveChanges();

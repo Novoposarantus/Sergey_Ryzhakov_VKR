@@ -9,6 +9,7 @@ import EditQuestionView from '@/views/EditQuestionView.vue';
 import EditTestView from '@/views/EditTestView.vue';
 import AssignmentsView from '@/views/AssignmentsView.vue';
 import UserAssignmentsView from '@/views/UserAssignmentsView.vue';
+import UserTestingView from '@/views/UserTestingView.vue';
 
 import {
     routeNames,
@@ -191,6 +192,25 @@ export function createRouter (store) {
                     await store.dispatch("userAssignments/GET");
                     next();
                 }  
+            },
+            {
+                path: '/testing/:id',
+                name: routeNames.Testing,
+                component : UserTestingView,
+                beforeEnter: async (to, _from, next) => {
+                    if(isNotAuthenticated(next)) return;
+                    if(!(await isInRole(next, roles.user))) return;
+                    await store.dispatch("userAssignments/GET");
+                    let assignment = store.getters["userAssignments/ASSIGNMENTS"].find(a=>
+                        a.id == to.params.id
+                        && a.result == null);
+                    if(!assignment) {
+                        next({name: routeNames.TestingList});
+                        return;
+                    }
+                    await store.dispatch("userTesting/GET", to.params.id);
+                    next();
+                } 
             }
         ]
     });

@@ -8,14 +8,14 @@
                 <v-layout row wrap>
                     <v-flex xs4>
                             <v-select
-                                v-model="testId"
+                                v-model="assignmentId"
                                 :items="testsSelect"
                                 single-line
                                 label="Тест"
                             ></v-select>
                     </v-flex>
                     <v-flex xs4 class="button">
-                        <v-btn  v-if="testId"
+                        <v-btn  v-if="assignmentId"
                                 @click="start()"
                                 color="success" 
                                 dark>
@@ -31,6 +31,7 @@
 
 <script>
 import ATable from '@/components/common/UserTesting/UserAssignmentsList.vue';
+import {routeNames} from '@/support';
 import { mapGetters } from 'vuex';
 export default {
     components:{
@@ -38,7 +39,7 @@ export default {
     },
     data(){
         return{
-            testId: null
+            assignmentId: null
         }
     },
     computed:{
@@ -54,13 +55,16 @@ export default {
         testsSelect(){
             return this.unsolvedAssignments.map(assignment => ({
                 text: assignment.testName,
-                value: assignment.testId
+                value: assignment.id
             }));
         }
     },
     methods:{
         start(){
-
+            if(this.assignmentId == null){
+                return;
+            }
+            this.$router.push({name: routeNames.Testing, params: {id: this.assignmentId}});
         }
     }
 }

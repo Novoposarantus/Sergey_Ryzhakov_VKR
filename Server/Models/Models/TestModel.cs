@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Models.DtoModels;
+using System.Collections.Generic;
 
 namespace Models.Models
 {

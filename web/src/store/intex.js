@@ -7,7 +7,8 @@ import {questionsList} from './questionsList';
 import {questionEdit} from './questionEdit';
 import {testEdit} from './testEdit';
 import {assignments} from './assignments'
-import {userAssignments} from './userAssignments'
+import {userAssignments} from './userAssignments';
+import {userTesting} from './userTesting';
 
 import {
     defaultVuex
@@ -23,7 +24,8 @@ const modules = {
     questionEdit,
     testEdit,
     assignments,
-    userAssignments
+    userAssignments,
+    userTesting
 }
 
 export function createStore() {

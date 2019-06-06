@@ -12,8 +12,8 @@ namespace Models.DtoModels
             TestName = model.Test.Name;
             TestId = model.TestModelId;
             Time = model.Duration.HasValue
-                ? TimeSpan.FromSeconds(model.Duration.Value).ToString(@"hh\:mm\:ss\")
-                : null;
+                ? TimeSpan.FromMilliseconds(model.Duration.Value).ToString()
+                : "";
             Result = model.Result;
             DateCreate = model.DateCreate.ToString("dd.MM.yyyy HH:mm");
         }

@@ -2,7 +2,7 @@
     <v-card
         class="expansion-panel"> 
         <v-card-text>
-            <v-card-tile>
+            <v-card-title>
                 <v-layout row class="panel">
                     <v-flex xs4>
                         <v-select
@@ -34,7 +34,7 @@
                         </v-btn>
                     </v-flex>
                 </v-layout>
-            </v-card-tile>
+            </v-card-title>
             <v-expansion-panel
                 flex
                 v-if="selectedTest">

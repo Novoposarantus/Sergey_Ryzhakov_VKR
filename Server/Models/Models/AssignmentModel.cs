@@ -14,5 +14,7 @@ namespace Models.Models
         public int? Duration { get; set; }
         public double? Result { get; set; }
         public DateTime DateCreate { get; set; }
+        public IEnumerable<TestResultQuestionsModel> TestResults { get; set; }
+        public IEnumerable<QuestionsResultAnswersModel> QuestionsResults { get; set; }
     }
 }

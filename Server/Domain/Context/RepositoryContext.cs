@@ -16,6 +16,8 @@ namespace Domain.Context
         public DbSet<TestModel> Tests { get; set; }
         public DbSet<QuestionToTestModel> QuestionToTests { get; set; }
         public DbSet<AssignmentModel> Assignments { get; set; }
+        public DbSet<TestResultQuestionsModel> TestResultQuestions { get; set; }
+        public DbSet<QuestionsResultAnswersModel> QuestionsResultAnswers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +31,8 @@ namespace Domain.Context
                 .HasOne(bc => bc.Question)
                 .WithMany(b => b.QuestionToTests)
                 .HasForeignKey(bc => bc.QuestionId);
+
+
 
             modelBuilder.Entity<RoleModel>().HasData(
                 new RoleModel() { Id = 1, Name = "admin" },

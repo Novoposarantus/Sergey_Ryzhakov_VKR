@@ -9,8 +9,10 @@ namespace Domain.Interfaces
         List<TestDto> Tests { get; }
         List<TestListItemDto> TestListItemDtos { get; }
         TestEditDto Get(int id);
+        TestWorkDto GetTestToWork(int id);
         void Save(SaveTestDto testDto);
         void Update(SaveTestDto testDto);
         void Delete(int id);
+        void SaveTestResult(TestAnswersDto result);
     }
 }

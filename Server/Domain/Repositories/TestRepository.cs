@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Models.Models;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System;
 using Models.DtoModels;
 
 namespace Domain.Repositories
@@ -53,6 +53,25 @@ namespace Domain.Repositories
                     .Include(question => question.Answers)
                     .ToList();
                 return new TestEditDto(test, allQuestions);
+            }
+        }
+
+        public TestWorkDto GetTestToWork(int assignmentId)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var test = context.Assignments
+                    .Include(a => a.Test)
+                    .ThenInclude(t => t.QuestionToTests)
+                    .ThenInclude(qt => qt.Question)
+                    .ThenInclude(q => q.Answers)
+                    .Include(a => a.Test)
+                    .ThenInclude(t => t.QuestionToTests)
+                    .ThenInclude(qt => qt.Question)
+                    .ThenInclude(q => q.QuestionType)
+                    .FirstOrDefault(x => x.Id == assignmentId)
+                    .Test;
+                return new TestWorkDto(test, assignmentId);
             }
         }
 
@@ -145,6 +164,100 @@ namespace Domain.Repositories
                 context.Tests.Remove(test);
                 context.SaveChanges();
             }
+        }
+
+        public void SaveTestResult(TestAnswersDto result)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+
+                List<QuestionWithDifficultyDto> allTestQuestions = context.Assignments
+                    .Where(a => a.Id == result.AssignmentId)
+                    .Include(a => a.Test)
+                    .ThenInclude(t => t.QuestionToTests)
+                    .SelectMany(a => a.Test.QuestionToTests)
+                    .Include(t => t.Question)
+                    .ThenInclude(q => q.Answers)
+                    .Select(qt=> new QuestionWithDifficultyDto(qt))
+                    .ToList();
+
+                var answers = context.Answers.Where(a => result.CheckedAnswers.Contains(a.Id));
+                Dictionary<int, QuestionTime> timeByQuestion = result.Times.ToDictionary(x => x.Id);
+                Dictionary<int, List<AnswerModel>> answersByQuestions = new Dictionary<int, List<AnswerModel>>();
+                foreach (var answer in answers)
+                {
+                    if (!answersByQuestions.ContainsKey(answer.QuestionId))
+                    {
+                        answersByQuestions[answer.QuestionId] = new List<AnswerModel>();
+                    }
+                    answersByQuestions[answer.QuestionId].Add(answer);
+                }
+
+                var assignment = context.Assignments.FirstOrDefault(a => a.Id == result.AssignmentId);
+                context.TestResultQuestions.AddRange(result.Times.Select(questionTime => new TestResultQuestionsModel()
+                {
+                    AssignmentModelId = assignment.Id,
+                    Milliseconds = questionTime.Milliseconds,
+                    QuestionModelId = questionTime.Id
+                }));
+                context.QuestionsResultAnswers.AddRange(result.CheckedAnswers.Select(answerId => new QuestionsResultAnswersModel()
+                {
+                    AnswerModelId = answerId,
+                    AssignmentModelId = assignment.Id
+                }));
+                assignment.Duration = result.Times.Sum(x => x.Milliseconds);
+                assignment.Result = GetTestResult(allTestQuestions, answersByQuestions, timeByQuestion);
+                context.Update(assignment);
+                context.SaveChanges();
+            }
+        }
+
+        private double GetTestResult(
+            IEnumerable<QuestionWithDifficultyDto> allTestQuestion,
+            Dictionary<int, List<AnswerModel>> checkedAnswersByWork,
+            Dictionary<int, QuestionTime> timeByQuestion )
+        {
+            double result = 0;
+            foreach (var question in allTestQuestion)
+            {
+                var checkedAnswers = checkedAnswersByWork.ContainsKey(question.Id)
+                    ? checkedAnswersByWork[question.Id]
+                    : new List<AnswerModel>();
+                var currentQuestionTime = timeByQuestion.ContainsKey(question.Id)
+                    ? timeByQuestion[question.Id].Milliseconds
+                    : 0;
+                result += question.Difficulty
+                    * GetResponseWeight(question.Answers, checkedAnswers)
+                    * GetTimeCoefficient(question.ReferenceResponseSeconds, currentQuestionTime);
+
+            }
+            return result;
+        }
+
+        private double GetResponseWeight(List<AnswerDto> answers, List<AnswerModel> checkedAnswers)
+        {
+            int rightAnswersCount = answers.Where(a => a.IsRight).Count();
+            int answersCount = answers.Count;
+            int wrongAnswersCount = answers.Where(a => !a.IsRight).Count();
+            if (checkedAnswers.Count == 0)
+            {
+                return 0;
+            }
+            if(checkedAnswers.All(x=>x.IsRight) && checkedAnswers.Count == rightAnswersCount)
+            {
+                return rightAnswersCount / (double)answersCount;
+            }
+            return - (wrongAnswersCount / (double)answersCount);
+        }
+
+        private double GetTimeCoefficient(int defaultQuestionSeconds, int currentQuestionMiliseconds)
+        {
+            if(defaultQuestionSeconds == 0) return 1;
+
+            var defaultQuestionMiliseconds = defaultQuestionSeconds * 1000;
+            if (currentQuestionMiliseconds < defaultQuestionMiliseconds) return 1;
+            if (currentQuestionMiliseconds > 3 * defaultQuestionMiliseconds) return 0.5;
+            return 1 / (currentQuestionMiliseconds / (double)defaultQuestionMiliseconds);
         }
     }
 }

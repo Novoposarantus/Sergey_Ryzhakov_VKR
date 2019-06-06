@@ -10,5 +10,6 @@ export const routeNames = {
     QuestionEdit: 'QuestionEdit',
     QuestionEditId: 'QuestionEditId',
     Assignments: 'Assignments',
-    TestingList: 'TestingList'
+    TestingList: 'TestingList',
+    Testing: 'Testing'
 }

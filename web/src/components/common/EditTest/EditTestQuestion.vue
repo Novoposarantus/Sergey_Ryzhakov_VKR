@@ -9,6 +9,18 @@
                                 class="d-inline-block"
                                 small
                                 color="red"></v-rating>
+                    <div>
+                        <h3 class="headline mb-0 d-inline-block difficulty">Оптимальное время решения в секундах:</h3>
+                         <v-text-field
+                            class="d-inline-block referenceResponseSeconds"
+                            :rules="[v => !!v || 'Поле не моет быть пустым']"
+                            v-model="referenceResponseSeconds"
+                            type="number"
+                        ></v-text-field>
+                        <div class="d-inline-block">
+                            {{referenceResponseSecondsString}}
+                        </div>
+                    </div>
                 </div>
                 <h3 class="headline mb-0">{{question.text}}</h3>
                 <ul>
@@ -33,6 +45,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import moment from 'moment';
 export default {
     props:{
         question: Object,
@@ -57,10 +70,35 @@ export default {
             set(newValue){
                 this.$emit("questionChange", {
                     id: this.question.id, 
-                    difficulty: newValue
+                    difficulty: newValue,
+                    referenceResponseSeconds: this.referenceResponseSeconds
                 });
             }
         },
+        referenceResponseSeconds:{
+            get(){
+                return this.question.referenceResponseSeconds;
+            },
+            set(newValue){
+                this.$emit("questionChange", {
+                    id: this.question.id, 
+                    difficulty: this.difficulty,
+                    referenceResponseSeconds: newValue
+                });
+            }
+        },
+        referenceResponseSecondsString(){
+            if(this.referenceResponseSeconds == null) return "00:00:00";
+            let allSeconds = this.referenceResponseSeconds;
+            let hours = parseInt(allSeconds / 3600); 
+            let hoursStr = `${hours < 10 ? "0" : ""}${hours}`
+            let remainder = allSeconds % 3600;
+            let minutes = parseInt(remainder / 60); 
+            let minutesStr = `${minutes < 10 ? "0" : ""}${minutes}`; 
+            let seconds = remainder % 60;
+            let secondsStr = `${seconds < 10 ? "0" : ""}${seconds}`;
+            return `${hoursStr}:${minutesStr}:${secondsStr}`;
+        }
     },
     methods: {
         remove(){
@@ -85,5 +123,8 @@ li {
     font-size: 20px;
     padding: 2px 0;
     margin-left: 5px;
+}
+.referenceResponseSeconds{
+    margin: 0 20px;
 }
 </style>

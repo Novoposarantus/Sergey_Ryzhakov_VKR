@@ -8,5 +8,6 @@ namespace Models.DtoModels
     {
         public int Id { get; set; }
         public int Difficulty { get; set; }
+        public int ReferenceResponseSeconds { get; set; }
     }
 }

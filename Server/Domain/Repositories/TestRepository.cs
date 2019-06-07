@@ -128,6 +128,7 @@ namespace Domain.Repositories
                         {
                             QuestionId = questionDto.Id,
                             Difficulty = questionDto.Difficulty,
+                            ReferenceResponseSeconds = questionDto.ReferenceResponseSeconds,
                             TestId = testDto.Id
                         });
                     }
@@ -142,6 +143,7 @@ namespace Domain.Repositories
                     else
                     {
                         testQuestion.Difficulty = questionDto.Difficulty;
+                        testQuestion.ReferenceResponseSeconds = questionDto.ReferenceResponseSeconds;
                         context.Update(testQuestion);
                     }
                 }

@@ -114,9 +114,11 @@ export default {
                     ...this.test,
                     questions : this.questions.filter(q=>!!q).map(q=>({
                         id: q.id,
-                        difficulty: q.difficulty
+                        difficulty: q.difficulty,
+                        referenceResponseSeconds: q.referenceResponseSeconds
                     }))
             }
+            console.log(test);
             if(this.isNew){
                 await this.saveTest(test);
             }else{
@@ -131,18 +133,20 @@ export default {
             var question = this.allQuestions.find(q=> q.id == questionId);
             this.questions.splice(index, 1, {
                 ...question,
-                difficulty : 1
+                difficulty : 1,
+                referenceResponseSeconds : 0
             });
         },
         questionRemove(index){
             this.questions.splice(index, 1);
         },
-        questionChange({id, difficulty}, index){
+        questionChange({id, difficulty, referenceResponseSeconds}, index){
             var question = this.allQuestions.find(question=> question.id == id);
             this.questions.splice(index, 1, 
             {
                 ...question,
-                difficulty: difficulty
+                difficulty: difficulty,
+                referenceResponseSeconds: referenceResponseSeconds
             });
         },
         async remove(){

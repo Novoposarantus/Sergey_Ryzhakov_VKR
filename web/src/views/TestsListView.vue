@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-toolbar flat color="white">
+    <div class="form">
+        <v-toolbar flat color="transparent">
             <v-toolbar-title>Список тестов</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn color="primary" dark @click="createNewTest()">
@@ -72,3 +72,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+.form{
+    padding: 2rem;
+}
+</style>

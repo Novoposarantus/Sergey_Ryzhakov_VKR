@@ -1,5 +1,6 @@
 <template>
     <v-checkbox
+        class="answer"
         v-model="isRight"
         color="success"
         :label="answer.text"
@@ -31,7 +32,8 @@ export default {
 </script>
 
 <style scoped>
-.answer-text{
-  align-items: center;
+.answer{
+    margin: 5px 0;
 }
 </style>
+

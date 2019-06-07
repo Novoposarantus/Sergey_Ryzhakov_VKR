@@ -118,7 +118,6 @@ export default {
                         referenceResponseSeconds: q.referenceResponseSeconds
                     }))
             }
-            console.log(test);
             if(this.isNew){
                 await this.saveTest(test);
             }else{

@@ -32,7 +32,16 @@ namespace API.Controllers
         [Authorize(Roles = RoleNames.Admin)]
         public IActionResult AllQuestions()
         {
-            return Ok(_questionRepository.Questions);
+            return Ok(
+                _questionRepository.Questions
+                .Select(question =>
+                {
+                    question.Name = (question.Name == null || question.Name == "")
+                        ? question.Text
+                        : question.Name;
+                    return question;
+                })
+                .ToList());
         }
 
         [HttpGet("{id}")]

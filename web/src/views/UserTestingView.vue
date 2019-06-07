@@ -5,6 +5,7 @@
             <v-progress-linear v-model="progress"/> 
         </div>
         <start-page 
+            :message="test.description"
             v-if="viewStartPage"
             @start="start()"/>
         <question
@@ -34,7 +35,7 @@
 
 <script>
 import StartPage from '@/components/common/UserTesting/TestingStartPage.vue'
-import Question from '@/components/common/UserTesting/UserTest.vue'
+import Question from '@/components/common/UserTesting/UserTestQuestion.vue'
 import { mapGetters, mapActions } from 'vuex';
 import {routeNames} from '@/support';
 import { setInterval, clearInterval } from 'timers';
@@ -120,8 +121,6 @@ export default {
                     Milliseconds: this.times[key]
                 });
             }
-            console.log(times);
-            console.log(checkedAnswers);
             await this.saveResult({
                 assignmentId,
                 checkedAnswers,

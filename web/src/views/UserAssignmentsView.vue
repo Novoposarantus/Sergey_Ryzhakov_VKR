@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="form">
         <v-card v-if="unsolvedAssignmentsAny" class="card">
             <v-card-title>
               <h3 class="headline mb-0">У вас есть непройденные тесты.</h3>
@@ -77,5 +77,8 @@ export default {
 }
 .button{
     padding-top: 8px;
+}
+.form{
+    padding: 2rem;
 }
 </style>

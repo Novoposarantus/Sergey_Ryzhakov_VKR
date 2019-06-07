@@ -51,6 +51,14 @@ namespace Domain.Repositories
                 var allQuestions = context.Questions
                     .Include(question => question.QuestionType)
                     .Include(question => question.Answers)
+                    .ToList()
+                    .Select(question =>
+                    {
+                        question.Name = (question.Name == null || question.Name == "")
+                            ? question.Text
+                            : question.Name;
+                        return question;
+                    })
                     .ToList();
                 return new TestEditDto(test, allQuestions);
             }
@@ -95,6 +103,7 @@ namespace Domain.Repositories
                 {
                     QuestionId = question.Id,
                     Difficulty = question.Difficulty,
+                    ReferenceResponseSeconds = question.ReferenceResponseSeconds,
                     TestId = testId
                 });
                 context.QuestionToTests.AddRange(questionToTests);

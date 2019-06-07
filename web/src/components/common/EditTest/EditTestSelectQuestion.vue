@@ -57,7 +57,7 @@ export default {
                 .filter(question => question.questionTypeId == this.typeId)
                 .map(question => ({
                     value: question.id,
-                    text: question.text
+                    text: question.name
                 }));
         },
     },

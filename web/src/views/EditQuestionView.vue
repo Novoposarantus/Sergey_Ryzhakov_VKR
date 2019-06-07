@@ -5,6 +5,18 @@
                 <v-toolbar-title>{{title}}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn  v-if="showSave"
+                        @click="showName()"
+                        color="primary" 
+                        dark>
+                    Добавить имя
+                </v-btn>
+                <v-btn  v-if="showSave"
+                        @click="showCodePlace()"
+                        color="primary" 
+                        dark>
+                    Добавить описание
+                </v-btn>
+                <v-btn  v-if="showSave"
                         @click="save()"
                         color="success" 
                         dark>
@@ -18,11 +30,24 @@
                 </v-btn>
             </v-toolbar>
             <v-text-field
+                v-if="questionNameShow"
+                v-model="question.name"
+                label="Имя"
+                required
+            ></v-text-field>
+            <v-text-field
                 v-model="question.text"
                 :rules="[v => !!v || 'Поле не моет быть пустым']"
                 label="Вопрос"
                 required
             ></v-text-field>
+            <v-textarea
+                v-if="codePlaceSwow"
+                rows="10"
+                v-model="question.code"
+                label="Дополнительно">
+
+            </v-textarea>
             <div>
                 <v-select
                     :items="types"
@@ -66,7 +91,7 @@
 import QuestionTypeDialog from "@/components/common/EditQuestion/QuestionTypeDialog.vue";
 import EditAnswer from "@/components/common/EditQuestion/EditAnswer.vue";
 import {mapGetters, mapActions} from 'vuex';
-import {emptyAnswer,routeNames} from '@/support';
+import {emptyAnswer,routeNames, minAnswersCount} from '@/support';
 
 export default {
     components:{
@@ -76,7 +101,9 @@ export default {
     data(){
         return {
             question:{},
-            answerAlert: false
+            answerAlert: false,
+            codePlaceSwow: false,
+            questionNameShow: false
         }
     },
     computed:{
@@ -93,10 +120,10 @@ export default {
             return "Редактирование вопроса."
         },
         showSave(){
-            return this.question.answers.length >= 4;
+            return this.question.answers.length >= minAnswersCount;
         },
         showDeleteAnswer(){
-            return this.question.answers.length > 4;
+            return this.question.answers.length > minAnswersCount;
         },
         types(){
             return this.vuexTypes.map(el=>({
@@ -114,18 +141,6 @@ export default {
             updateQuestion : "questionEdit/UPDATE",
             deleteQuestion : "questionEdit/DELETE"
         }),
-        async save(){
-            if (!this.$refs.form.validate() || this.rightAnswersCount == 0) {
-                this.answerAlert = this.rightAnswersCount == 0;
-                return;
-            }
-            if(this.isNew){
-                await this.saveQuestion({...this.question});
-            }else{
-                await this.updateQuestion({...this.question});
-            }
-            this.$router.push({name: routeNames.QuestionsList});
-        },
         addAnswer(){
             this.question.answers.push({
                 ...emptyAnswer
@@ -140,6 +155,30 @@ export default {
             let index = this.question.answers.indexOf(answer);
             this.question.answers.splice(index, 1);
         },
+        showCodePlace(){
+            this.codePlaceSwow = !this.codePlaceSwow;
+            if(!this.codePlaceSwow){
+                this.question.code = null;
+            }
+        },
+        showName(){
+            this.questionNameShow = !this.questionNameShow;
+            if(!this.questionNameShow){
+                this.question.name = null;
+            }
+        },
+        async save(){
+            if (!this.$refs.form.validate() || this.rightAnswersCount == 0) {
+                this.answerAlert = this.rightAnswersCount == 0;
+                return;
+            }
+            if(this.isNew){
+                await this.saveQuestion({...this.question});
+            }else{
+                await this.updateQuestion({...this.question});
+            }
+            this.$router.push({name: routeNames.QuestionsList});
+        },
         async remove(){
             if(this.isNew) return;
             await this.deleteQuestion(this.question.id);
@@ -153,7 +192,9 @@ export default {
             answers:[
                 ...question.answers.map(a=> ({...a}))
             ]
-        }
+        },
+        this.questionNameShow = !!question.name;
+        this.codePlaceSwow = !!question.code;
     }
 }
 </script>

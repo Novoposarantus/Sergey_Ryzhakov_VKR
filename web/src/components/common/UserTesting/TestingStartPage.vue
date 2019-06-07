@@ -1,7 +1,7 @@
 <template>
     <v-card class="card">
         <v-card-text class="text-center">
-            Предупреждающий текст
+            <div cla v-if="showMessage" v-html="messageHtml"></div>
             <div class="button">
                 <v-btn
                     color="success"
@@ -17,6 +17,22 @@
 
 <script>
 export default {
+    props:{
+        message: {
+            type: String,
+            default: null
+        }
+    },
+    computed:{
+        showMessage(){
+            return this.message != null && this.message.length > 0;
+        },
+        messageHtml(){
+            return this.message
+                .split("\n")
+                .join("<br>");
+        }
+    },
     methods:{
         start(){
             this.$emit("start");

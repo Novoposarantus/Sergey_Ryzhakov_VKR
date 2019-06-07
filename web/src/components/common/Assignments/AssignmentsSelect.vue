@@ -40,17 +40,17 @@
                 v-if="selectedTest">
                 <v-expansion-panel-content flex>
                     <template v-slot:header>
-                        <div>{{selectedTest.name}}</div>
+                        <div class="font-16">{{selectedTest.name}}</div>
                     </template>
                     <v-card v-if="selectedTest">
                         <v-card-title primary-title>
-                            <div>
-                                <h3 class="headline mb-0">{{selectedTest.name}}</h3>
-                                <div> {{ selectedTest.description }} </div>
+                            <div class="font-14 p-l-16">
+                                {{ selectedTest.description }}
                             </div>
                         </v-card-title>
                         <v-card-text>
                             <question-view
+                                    readonly
                                     v-for="question in selectedTest.questions"
                                     :key="question.id"
                                     :question="question"
@@ -149,5 +149,14 @@ export default {
 }
 .panel{
     margin: 0 10px;
+}
+.font-16{
+    font-size: 16px;
+}
+.font-14{
+    font-size: 14px;
+}
+.p-l-16{
+    padding-left: 16px;
 }
 </style>

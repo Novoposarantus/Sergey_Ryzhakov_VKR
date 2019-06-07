@@ -4,6 +4,7 @@
       <app-navigation v-if="isAuthenticated"></app-navigation>
       <app-header></app-header>
       <v-content>
+        <v-progress-linear v-show="isLoading" class="loading-progress" :indeterminate="true"></v-progress-linear>
           <router-view></router-view>
       </v-content>
       <app-footer></app-footer>
@@ -27,6 +28,7 @@ export default {
   computed:{
     ...mapGetters({
       isAuthenticated: 'auth/IS_AUTHENTICATED',
+      isLoading: "IS_LOADING"
     })
   },
   async beforeMount(){
@@ -36,3 +38,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.loading-progress{
+  position: absolute;
+}
+</style>

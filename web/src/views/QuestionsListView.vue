@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-toolbar flat color="white">
+    <div class="form">
+        <v-toolbar flat color="transparent">
             <v-toolbar-title>Список вопросов</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn color="primary" dark @click="createNewQuestion()">
@@ -15,7 +15,7 @@
             :pagination.sync="pagination"
         >
             <template v-slot:items="props">
-                <td @click="editQuestion(props.item)">{{ props.item.text }}</td>
+                <td @click="editQuestion(props.item)">{{ props.item.name }}</td>
                 <td class="text-xs">{{ props.item.typeName }}</td>
                 <td class="text-xs">{{ props.item.answersCount }}</td>
                 <td class="text-xs">{{ props.item.rightAnswersCount }}</td>
@@ -42,7 +42,7 @@ export default {
             rowsPerPage: 20
         },
         headers: [
-            { text: 'Вопрос', value: 'text' },
+            { text: 'Имя', value: 'name' },
             { text: 'Тип', value: 'typeName' },
             { text: 'Количество ответов', value: 'answersCount' },
             { text: 'Количество правильных ответов', value: 'rightAnswersCount' }
@@ -71,3 +71,11 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+.form{
+    padding: 2rem;
+}
+</style>
+

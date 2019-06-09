@@ -14,7 +14,9 @@ namespace Models.DtoModels
             Time = model.Duration.HasValue
                 ? TimeSpan.FromMilliseconds(model.Duration.Value).ToString()
                 : "";
-            Result = model.Result;
+            Result = model.Result.HasValue
+                ? Math.Round(model.Result.Value, 3)
+                : model.Result;
             DateCreate = model.DateCreate.ToString("dd.MM.yyyy HH:mm");
         }
         public int Id { get; set; }

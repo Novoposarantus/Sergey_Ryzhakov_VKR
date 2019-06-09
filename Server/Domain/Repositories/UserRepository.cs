@@ -107,7 +107,7 @@ namespace Domain.Repositories
             }
             catch (UserRepositoryException) { }
             user.Password = AuthenticationHelper.HashPassword(user.Password);
-            user.RoleId = 1;
+            user.RoleId = (int)RoleEnum.User;
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
                 user.Id = 0;

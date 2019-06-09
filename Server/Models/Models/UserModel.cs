@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Models.Enums;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Models
@@ -6,12 +7,16 @@ namespace Models.Models
     public class UserModel
     {
         public UserModel() { }
+        public UserModel(string userName, string password) : this(userName, password, (int)RoleEnum.User) { }
         public UserModel(string userName, string password, int roleId)
         {
             UserName = userName;
             Password = password;
             RoleId = roleId;
         }
+
+        
+
         public int Id { get;set; }
         public string UserName { get; set; }
         public string Password { get; set; }

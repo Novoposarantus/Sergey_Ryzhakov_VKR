@@ -49,7 +49,7 @@
                         color="success"
                         @click="submit"
                     >
-                        Войти
+                        Зарегестрироваться
                     </v-btn>
                 </div>
             </v-form>
@@ -59,7 +59,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {defaultVuex} from '../../support';
+import {defaultVuex, routeNames} from '@/support';
 
 export default {
     data(){
@@ -95,7 +95,7 @@ export default {
             }
             await this.register({...this.form});
             if(!this.error){
-                this.toLogin();
+                this.$router.push({name: routeNames.Login});
             }
         },
         validate(){

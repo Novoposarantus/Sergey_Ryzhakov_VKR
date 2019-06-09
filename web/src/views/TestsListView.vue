@@ -18,6 +18,9 @@
                 <td @click="editTest(props.item)">{{ props.item.name }}</td>
                 <td class="text-xs">{{ props.item.description }}</td>
                 <td class="text-xs">{{ props.item.questionsCount }}</td>
+                <td class="text-xs">{{ props.item.maxResult }}</td>
+                <td class="text-xs">{{ props.item.minResult }}</td>
+                <td class="text-xs">{{ props.item.referenceTime }}</td>
             </template>
             <template v-slot:no-data>
                 <v-alert :value="true" color="error" icon="warning">
@@ -46,7 +49,10 @@ export default {
             value: 'name'
             },
             { text: 'Описание', value: 'description' },
-            { text: 'Количество вопросов', value: 'questionsCount' }
+            { text: 'Количество вопросов', value: 'questionsCount' },
+            { text: 'Максимум', value: 'maxResult' },
+            { text: 'Минимум', value: 'minResult' },
+            { text: 'Оптимальное время', value: 'referenceTime' }
         ]
         }
     },
